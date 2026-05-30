@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduCate - Kodlama & Dil Öğrenimi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        /* SENİN VERDİĞİN LOGO - SADECE KENARLARI YUVARLAK */
+        .logo-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;  /* Kenarları yuvarlatıldı */
+            animation: float 3s ease-in-out infinite;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            background: white;
+            padding: 8px;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 12px 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: #f5f5f5;
+            padding: 8px 18px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .streak { color: #FF9800; font-weight: bold; }
+        .points { color: #4CAF50; font-weight: bold; }
+
+        .category-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .cat-btn {
+            flex: 1;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: bold;
+            background: rgba(255,255,255,0.9);
+            color: #667eea;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+
+        .cat-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .level-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .level-card:hover:not(.locked) {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .level-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .level-number {
+            font-size: 48px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .level-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .level-desc {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .lock-icon {
+            font-size: 20px;
+            margin-top: 10px;
+        }
+
+        .question-container {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .question-text {
+            font-size: 22px;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+            margin: 30px 0;
+        }
+
+        .option {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .option:hover {
+            background: #e0e0e0;
+            transform: translateX(5px);
+        }
+
+        .option.correct {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .option.wrong {
+            background: #FF5252;
+            color: white;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            margin: 50px auto;
+        }
+
+        .result-score {
+            font-size: 72px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .stars {
+            font-size: 48px;
+            margin: 20px 0;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #5a67d8;
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 768px) {
+            .header { flex-direction: column; }
+            .levels-grid { grid-template-columns: 1fr; }
+            .question-text { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        // ==================== SENİN LOGON (SADECE KENARLARI YUVARLAK) ====================
+        // Molekül/logogram şeklindeki logon - Kenarları yuvarlatılmış hali
+        const logoHtml = `<img class="logo-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' stroke='%23667eea' stroke-width='3' fill='none'/%3E%3Ccircle cx='50' cy='30' r='8' fill='%23667eea'/%3E%3Ccircle cx='30' cy='50' r='8' fill='%23764ba2'/%3E%3Ccircle cx='50' cy='70' r='8' fill='%23667eea'/%3E%3Ccircle cx='70' cy='50' r='8' fill='%23764ba2'/%3E%3Cline x1='42' y1='36' x2='38' y2='44' stroke='%23667eea' stroke-width='2'/%3E%3Cline x1='58' y1='36' x2='62' y2='44' stroke='%23764ba2' stroke-width='2'/%3E%3Cline x1='38' y1='56' x2='42' y2='64' stroke='%23667eea' stroke-width='2'/%3E%3Cline x1='62' y1='56' x2='58' y2='64' stroke='%23764ba2' stroke-width='2'/%3E%3C/svg%3E" alt="EduCate Logo">`;
+
+        // ==================== SORU HAVUZU ====================
+        
+        // KODLAMA SORULARI (Python + Java karışık)
+        const codingQuestions = {
+            1: [ // Seviye 1 - Başlangıç
+                { text: "Python'da ekrana yazı yazdırmak için hangi fonksiyon kullanılır?", options: ["print()", "write()", "echo()", "console.log()"], correct: 0, explanation: "print() Python'da ekrana çıktı vermek için kullanılır." },
+                { text: "Java'da main metodunun doğru yazımı hangisidir?", options: ["public static void main(String[] args)", "public void main()", "static void main()", "void main()"], correct: 0, explanation: "public static void main(String[] args) Java'nın giriş noktasıdır." },
+                { text: "Python'da değişken tipini öğrenmek için hangi fonksiyon kullanılır?", options: ["type()", "typeof()", "getType()", "varType()"], correct: 0, explanation: "type() fonksiyonu değişkenin tipini döndürür." },
+                { text: "Java'da 'int' kaç byte'tır?", options: ["2", "4", "8", "16"], correct: 1, explanation: "int Java'da 4 byte (32 bit) yer kaplar." },
+                { text: "Python'da yorum satırı nasıl yazılır?", options: ["//", "/* */", "#", "<!-- -->"], correct: 2, explanation: "# işareti Python'da yorum satırı için kullanılır." },
+                { text: "Java'da yorum satırı nasıl yazılır?", options: ["#", "//", "<!-- -->", "**"], correct: 1, explanation: "// tek satırlık yorum için, /* */ çok satırlık için kullanılır." },
+                { text: "Python'da 'elif' ne işe yarar?", options: ["Else if", "Else", "If", "Loop"], correct: 0, explanation: "elif = else if, çoklu koşul kontrolü için kullanılır." },
+                { text: "Java'da '==' operatörü string'lerde neyi karşılaştırır?", options: ["Değeri", "Referansı", "Uzunluğu", "Hash kodunu"], correct: 1, explanation: "String'lerde == referans karşılaştırması yapar." },
+                { text: "Python'da 'for' döngüsü hangi veri tipinde gezebilir?", options: ["Liste", "String", "Range", "Hepsi"], correct: 3, explanation: "for döngüsü iterable tüm veri tiplerinde gezebilir." },
+                { text: "Java'da 'ArrayList' hangi pakettedir?", options: ["java.util", "java.lang", "java.collections", "java.list"], correct: 0, explanation: "ArrayList java.util paketindedir." },
+                { text: "Python'da None neyi ifade eder?", options: ["0", "Boş değer", "False", "Null"], correct: 1, explanation: "None = hiçlik, boş değer anlamına gelir." },
+                { text: "Java'da 'null' ne ifade eder?", options: ["0", "Boş referans", "false", "Hata"], correct: 1, explanation: "null, bir nesnenin hiçbir şeyi işaret etmediğini gösterir." },
+                { text: "Python'da listeler hangi parantezle tanımlanır?", options: ["()", "[]", "{}", "<>"], correct: 1, explanation: "Listeler köşeli parantezle tanımlanır." },
+                { text: "Java'da 'final' anahtar kelimesi ne işe yarar?", options: ["Değişmez yapar", "Kalıtım sağlar", "Polimorfizm yapar", "Soyut yapar"], correct: 0, explanation: "final değişkenlerde sabit yapar." },
+                { text: "print(type(True)) Python'da çıktısı nedir?", options: ["bool", "int", "str", "True"], correct: 0, explanation: "True ve False bool tipindedir." }
+            ],
+            2: [ // Seviye 2 - Kolay
+                { text: "Python'da 'append()' hangi veri tipinin metodudur?", options: ["String", "List", "Tuple", "Dict"], correct: 1, explanation: "append() listelere eleman eklemek için kullanılır." },
+                { text: "Java'da 'extends' ne işe yarar?", options: ["Arayüz", "Kalıtım", "Paket", "Dizi"], correct: 1, explanation: "extends bir sınıfın başka bir sınıftan miras almasını sağlar." },
+                { text: "Python'da lambda ifadesi nedir?", options: ["Döngü", "İsimsiz fonksiyon", "Sınıf", "Modül"], correct: 1, explanation: "Lambda = tek satırlık isimsiz fonksiyon." },
+                { text: "Java'da 'override' nedir?", options: ["Metodu yeniden yazma", "Metodu gizleme", "Metodu silme", "Metodu çağırma"], correct: 0, explanation: "Override, alt sınıfın üst sınıf metodunu yeniden tanımlamasıdır." },
+                { text: "Python'da 'break' ne işe yarar?", options: ["Döngüyü durdurur", "Döngüyü atlar", "Hata verir", "Yeniden başlatır"], correct: 0, explanation: "break döngüden çıkmak için kullanılır." }
+            ],
+            3: [ // Seviye 3 - Orta
+                { text: "Python'da 'try-except' ne için kullanılır?", options: ["Döngü", "Koşul", "Hata yönetimi", "Fonksiyon"], correct: 2, explanation: "try-except hata yakalama için kullanılır." },
+                { text: "Java'da 'interface' nedir?", options: ["Soyut sınıf", "Sadece metod imzaları", "Concrete sınıf", "Enum"], correct: 1, explanation: "Interface sadece metod imzaları ve sabitleri içerir." },
+                { text: "Python'da 'map()' fonksiyonu ne yapar?", options: ["Sıralar", "Filtreler", "Dönüştürür", "Birleştirir"], correct: 2, explanation: "map() her elemana fonksiyon uygular." }
+            ],
+            4: [ // Seviye 4 - İleri
+                { text: "Python'da decorator nedir?", options: ["Süsleyici", "Fonksiyon sarmalayıcı", "Sınıf", "Modül"], correct: 1, explanation: "Decorator'lar fonksiyonları sarmalayıp özellik ekler." },
+                { text: "Java'da 'generics' ne işe yarar?", options: ["Tip güvenliği", "Döngü", "Dizi", "String"], correct: 0, explanation: "Generics tip güvenliği sağlar." }
+            ],
+            5: [ // Seviye 5 - Uzman
+                { text: "Python'da GIL nedir?", options: ["Global Interpreter Lock", "Graphic Library", "General Input Logic", "Green Island Loop"], correct: 0, explanation: "GIL, CPython'da thread'leri kısıtlayan mekanizmadır." },
+                { text: "Java'da 'JVM' nedir?", options: ["Java Virtual Machine", "Java Variable Memory", "Java Visual Mode", "Java Version Manager"], correct: 0, explanation: "JVM, Java bytecode'unu çalıştıran sanal makinedir." }
+            ]
+        };
+
+        // İNGİLİZCE SORULARI
+        const englishQuestions = {
+            1: [ // Seviye 1 - Başlangıç
+                { text: "'Merhaba' İngilizcesi nedir?", options: ["Goodbye", "Hello", "Thanks", "Please"], correct: 1, explanation: "'Hello' = Merhaba" },
+                { text: "'Teşekkür ederim' nasıl denir?", options: ["Please", "Sorry", "Thank you", "Goodbye"], correct: 2, explanation: "'Thank you' = Teşekkür ederim" },
+                { text: "'Nasılsın?' nasıl sorulur?", options: ["What's this?", "How are you?", "Where is it?", "Who are you?"], correct: 1, explanation: "'How are you?' = Nasılsın?" },
+                { text: "'Kedi' İngilizcesi nedir?", options: ["Dog", "Cat", "Bird", "Fish"], correct: 1, explanation: "'Cat' = Kedi" },
+                { text: "'Mavi' hangi renktir?", options: ["Red", "Green", "Blue", "Yellow"], correct: 2, explanation: "'Blue' = Mavi" },
+                { text: "'1' sayısı nasıl yazılır?", options: ["One", "Two", "Three", "Four"], correct: 0, explanation: "'One' = 1" },
+                { text: "'Ev' İngilizcesi nedir?", options: ["Home", "House", "Both", "Hut"], correct: 2, explanation: "'Home' ve 'House' ikisi de ev anlamına gelir." },
+                { text: "'Güle güle' ne demek?", options: ["Hello", "Goodbye", "Hi", "Hey"], correct: 1, explanation: "'Goodbye' = Güle güle" },
+                { text: "'Ben' zamiri nedir?", options: ["You", "He", "I", "She"], correct: 2, explanation: "'I' = Ben" },
+                { text: "'Su' İngilizcesi?", options: ["Water", "Milk", "Juice", "Tea"], correct: 0, explanation: "'Water' = Su" },
+                { text: "'Evet' nasıl denir?", options: ["No", "Yes", "OK", "Maybe"], correct: 1, explanation: "'Yes' = Evet" },
+                { text: "'Hayır' nasıl denir?", options: ["Yes", "No", "Not", "Never"], correct: 1, explanation: "'No' = Hayır" },
+                { text: "'Lütfen' ne demek?", options: ["Sorry", "Thank you", "Please", "Excuse me"], correct: 2, explanation: "'Please' = Lütfen" },
+                { text: "'Anne' İngilizcesi?", options: ["Father", "Mother", "Sister", "Brother"], correct: 1, explanation: "'Mother' = Anne" },
+                { text: "'Baba' İngilizcesi?", options: ["Mother", "Sister", "Brother", "Father"], correct: 3, explanation: "'Father' = Baba" }
+            ],
+            2: [ // Seviye 2 - Kolay
+                { text: "'Hava durumu nasıl?' sorusu?", options: ["What's the weather?", "How old are you?", "Where are you from?", "What time is it?"], correct: 0, explanation: "'What's the weather?' = Hava nasıl?" },
+                { text: "'Ben 20 yaşındayım' nasıl denir?", options: ["I have 20 years", "I am 20 years old", "I do 20 years", "I make 20 years"], correct: 1, explanation: "'I am 20 years old' doğru kullanımdır." },
+                { text: "'Kitap' çoğulu nedir?", options: ["Book", "Books", "Bookes", "Booken"], correct: 1, explanation: "Çoğul yapmak için -s eklenir: Books" },
+                { text: "'O (erkek) bir doktor' nasıl denir?", options: ["She is a doctor", "He is a doctor", "It is a doctor", "They are doctor"], correct: 1, explanation: "Erkek için 'He' kullanılır." },
+                { text: "'Şimdi saat kaç?' sorusu?", options: ["What time is it?", "How time is it?", "When is clock?", "What's the clock?"], correct: 0, explanation: "'What time is it?' = Saat kaç?" }
+            ],
+            3: [ // Seviye 3 - Orta
+                { text: "'Geçmiş olsun' nasıl denir?", options: ["Get well soon", "Good luck", "Congratulations", "Well done"], correct: 0, explanation: "'Get well soon' = Geçmiş olsun" },
+                { text: "'Şerefe!' nasıl denir?", options: ["Cheers", "God bless", "Good health", "Salute"], correct: 0, explanation: "Toast yaparken 'Cheers!' denir." },
+                { text: "'Özür dilerim' nasıl denir?", options: ["Thank you", "Please", "Sorry", "Excuse me"], correct: 2, explanation: "'Sorry' = Özür dilerim" }
+            ],
+            4: [ // Seviye 4 - İleri
+                { text: "'I wish I had known' ne demek?", options: ["Keşke bilseydim", "Keşke bilmeseydim", "Keşke bileceğim", "Keşke biliyorum"], correct: 0, explanation: "Geçmişte bilmediğine pişmanlık ifade eder." },
+                { text: "'By the way' ne demek?", options: ["Bu arada", "Yan yoldan", "Bu şekilde", "Yol ile"], correct: 0, explanation: "Konuşmanda ek bilgi verirken kullanılır." }
+            ],
+            5: [ // Seviye 5 - Uzman
+                { text: "'To be or not to be' hangi eserden?", options: ["Romeo Juliet", "Hamlet", "Macbeth", "Othello"], correct: 1, explanation: "Shakespeare'in Hamlet oyunundan ünlü replik." },
+                { text: "'Cogito ergo sum' ne demek?", options: ["Düşünüyorum o halde varım", "Görüyorum o halde varım", "Seviyorum o halde varım", "Yaşıyorum o halde varım"], correct: 0, explanation: "Descartes'in ünlü sözü." }
+            ]
+        };
+
+        // ALMANCA SORULARI
+        const germanQuestions = {
+            1: [ // Seviye 1 - Başlangıç
+                { text: "'Merhaba' Almancası nedir?", options: ["Auf Wiedersehen", "Hallo", "Danke", "Bitte"], correct: 1, explanation: "'Hallo' = Merhaba" },
+                { text: "'Teşekkür ederim' Almancası?", options: ["Bitte", "Danke", "Tschüss", "Guten Tag"], correct: 1, explanation: "'Danke' = Teşekkür ederim" },
+                { text: "'Güle güle' Almancası?", options: ["Hallo", "Danke", "Tschüss", "Guten Morgen"], correct: 2, explanation: "'Tschüss' = Güle güle" },
+                { text: "'Evet' Almancası?", options: ["Nein", "Ja", "OK", "Vielleicht"], correct: 1, explanation: "'Ja' = Evet" },
+                { text: "'Hayır' Almancası?", options: ["Ja", "Nein", "Nicht", "Nie"], correct: 1, explanation: "'Nein' = Hayır" },
+                { text: "'1' sayısı Almanca?", options: ["Eins", "Zwei", "Drei", "Vier"], correct: 0, explanation: "'Eins' = 1" },
+                { text: "'2' sayısı Almanca?", options: ["Eins", "Zwei", "Drei", "Vier"], correct: 1, explanation: "'Zwei' = 2" },
+                { text: "'3' sayısı Almanca?", options: ["Eins", "Zwei", "Drei", "Vier"], correct: 2, explanation: "'Drei' = 3" },
+                { text: "'Günaydın' Almancası?", options: ["Guten Abend", "Gute Nacht", "Guten Morgen", "Guten Tag"], correct: 2, explanation: "'Guten Morgen' = Günaydın" },
+                { text: "'İyi günler' Almancası?", options: ["Guten Morgen", "Guten Tag", "Guten Abend", "Gute Nacht"], correct: 1, explanation: "'Guten Tag' = İyi günler" },
+                { text: "'Ben' Almancası?", options: ["Du", "Er", "Ich", "Sie"], correct: 2, explanation: "'Ich' = Ben" },
+                { text: "'Sen' Almancası?", options: ["Ich", "Du", "Er", "Wir"], correct: 1, explanation: "'Du' = Sen" },
+                { text: "'Lütfen' Almancası?", options: ["Danke", "Bitte", "Sorry", "Tschüss"], correct: 1, explanation: "'Bitte' = Lütfen" },
+                { text: "'Su' Almancası?", options: ["Wasser", "Bier", "Wein", "Milch"], correct: 0, explanation: "'Wasser' = Su" },
+                { text: "'Ekmek' Almancası?", options: ["Brot", "Käse", "Wurst", "Butter"], correct: 0, explanation: "'Brot' = Ekmek" }
+            ],
+            2: [ // Seviye 2 - Kolay
+                { text: "'Adın ne?' Almancası?", options: ["Wie alt bist du?", "Wie heißt du?", "Wo wohnst du?", "Was machst du?"], correct: 1, explanation: "'Wie heißt du?' = Adın ne?" },
+                { text: "'Ben Ali' Almancası?", options: ["Ich bin Ali", "Ich heiße Ali", "Beide", "Keines"], correct: 2, explanation: "İkisi de doğru." },
+                { text: "'Kaç yaşındasın?' Almancası?", options: ["Wie heißt du?", "Wie alt bist du?", "Woher kommst du?", "Was ist das?"], correct: 1, explanation: "'Wie alt bist du?' = Kaç yaşındasın?" },
+                { text: "'Türkiye'den geliyorum' Almancası?", options: ["Ich komme aus Deutschland", "Ich komme aus der Türkei", "Ich bin in Türkei", "Ich wohne in Türkei"], correct: 1, explanation: "'aus der Türkei' = Türkiye'den" },
+                { text: "'Güzel' Almancası?", options: ["Schlecht", "Schön", "Groß", "Klein"], correct: 1, explanation: "'Schön' = Güzel" }
+            ],
+            3: [ // Seviye 3 - Orta
+                { text: "'Dönüş yapacağım' Almancası?", options: ["Ich gehe", "Ich komme zurück", "Ich laufe", "Ich springe"], correct: 1, explanation: "'zurückkommen' = geri dönmek" },
+                { text: "'Anlamadım' Almancası?", options: ["Ich verstehe nicht", "Ich weiß nicht", "Ich kann nicht", "Ich mache nicht"], correct: 0, explanation: "'Ich verstehe nicht' = Anlamadım" },
+                { text: "'Yardım eder misin?' Almancası?", options: ["Kannst du helfen?", "Hilfst du mir?", "Kannst du mir helfen?", "Hilfe!"], correct: 2, explanation: "'Kannst du mir helfen?' = Yardım eder misin?" }
+            ],
+            4: [ // Seviye 4 - İleri
+                { text: "'Schadenfreude' ne demek?", options: ["Başkasının üzüntüsüne sevinme", "Üzüntü", "Mutluluk", "Korku"], correct: 0, explanation: "Başkasının kötü durumuna sevinmek." },
+                { text: "'Fernweh' ne demek?", options: ["Ev hasreti", "Uzaklara gitme isteği", "Deniz özlemi", "Dağ hasreti"], correct: 1, explanation: "'Fern' (uzak) + 'Weh' (ağrı) = Uzaklara gitme isteği" }
+            ],
+            5: [ // Seviye 5 - Uzman
+                { text: "'Vergangenheitsbewältigung' ne anlama gelir?", options: ["Gelecek planı", "Geçmişle hesaplaşma", "Şimdiki zaman", "Gelecek korkusu"], correct: 1, explanation: "Almanya'nın Nazi geçmişiyle yüzleşmesi." },
+                { text: "'Weltschmerz' ne demek?", options: ["Dünya sevgisi", "Dünya acısı", "Dünya barışı", "Dünya neşesi"], correct: 1, explanation: "Dünyanın kötülüğü karşısında melankoli." }
+            ]
+        };
+
+        // Seviye eksiklerini tamamla (her seviyede en az 15 soru)
+        for (let level = 1; level <= 5; level++) {
+            while (codingQuestions[level].length < 15) {
+                codingQuestions[level].push(...codingQuestions[level].slice(0, 5));
+            }
+            codingQuestions[level] = codingQuestions[level].slice(0, 15);
+            
+            while (englishQuestions[level].length < 15) {
+                englishQuestions[level].push(...englishQuestions[level].slice(0, 5));
+            }
+            englishQuestions[level] = englishQuestions[level].slice(0, 15);
+            
+            while (germanQuestions[level].length < 15) {
+                germanQuestions[level].push(...germanQuestions[level].slice(0, 5));
+            }
+            germanQuestions[level] = germanQuestions[level].slice(0, 15);
+        }
+
+        // ==================== UYGULAMA DURUMU ====================
+        let currentCategory = 'coding';
+        let currentLevel = null;
+        let unlockedLevels = JSON.parse(localStorage.getItem('unlockedLevels_educate') || '{"coding": [1], "english": [1], "german": [1]}');
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userPoints = JSON.parse(localStorage.getItem('userPoints_educate') || '{"coding": 0, "english": 0, "german": 0}');
+        
+        // Kullanılmış soruları takip et (ard arda aynı soru gelmesin diye)
+        let usedQuestionsHistory = { coding: {}, english: {}, german: {} };
+
+        function getRandomQuestions(category, level, count = 5) {
+            let pool;
+            if (category === 'coding') pool = codingQuestions[level];
+            else if (category === 'english') pool = englishQuestions[level];
+            else pool = germanQuestions[level];
+            
+            // Daha önce kullanılan soruların ID'lerini al
+            const historyKey = `${category}_${level}`;
+            if (!usedQuestionsHistory[category]) usedQuestionsHistory[category] = {};
+            if (!usedQuestionsHistory[category][level]) usedQuestionsHistory[category][level] = [];
+            
+            const usedIds = usedQuestionsHistory[category][level];
+            
+            // Kullanılmayan soruları filtrele
+            let available = pool.filter((_, idx) => !usedIds.includes(idx));
+            
+            // Eğer kullanılmayan soru kalmadıysa, history'yi sıfırla
+            if (available.length < count) {
+                usedQuestionsHistory[category][level] = [];
+                available = [...pool];
+            }
+            
+            // Rastgele seç
+            const shuffled = [...available];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            
+            const selected = shuffled.slice(0, count);
+            
+            // Seçilen soruları history'e ekle
+            selected.forEach(q => {
+                const idx = pool.findIndex(p => p.text === q.text);
+                if (!usedQuestionsHistory[category][level].includes(idx)) {
+                    usedQuestionsHistory[category][level].push(idx);
+                }
+            });
+            
+            return selected;
+        }
+
+        function unlockLevel(category, level) {
+            if (!unlockedLevels[category].includes(level)) {
+                unlockedLevels[category].push(level);
+                localStorage.setItem('unlockedLevels_educate', JSON.stringify(unlockedLevels));
+            }
+        }
+
+        function checkAndUnlockNextLevel() {
+            const nextLevel = currentLevel + 1;
+            if (nextLevel <= 5 && score >= 40) {
+                if (!unlockedLevels[currentCategory].includes(nextLevel)) {
+                    unlockLevel(currentCategory, nextLevel);
+                    alert(`🎉 Tebrikler! ${getCategoryName()} Seviye ${nextLevel} açıldı! 🎉`);
+                }
+            }
+        }
+
+        function savePoints() {
+            userPoints[currentCategory] += score;
+            localStorage.setItem('userPoints_educate', JSON.stringify(userPoints));
+        }
+
+        function getCategoryName() {
+            const names = { coding: '💻 Kodlama', english: '🇬🇧 İngilizce', german: '🇩🇪 Almanca' };
+            return names[currentCategory];
+        }
+
+        function render() {
+            if (currentLevel === null) {
+                renderCategorySelect();
+            } else if (currentQuestionIndex < currentQuestions.length) {
+                renderQuestion();
+            } else {
+                renderResult();
+            }
+        }
+
+        function renderCategorySelect() {
+            const levelNames = ['🥉 Başlangıç', '📘 Kolay', '📙 Orta', '📗 İleri', '🏆 Uzman'];
+            const levelDescs = ['Temel kavramlar', 'Pratik bilgiler', 'Problem çözme', 'Derin konular', 'Uzmanlık'];
+            
+            app.innerHTML = `
+                <div class="container">
+                    <div class="header">
+                        <div class="logo-container">
+                            ${logoHtml}
+                            <span class="logo-text">EduCate</span>
+                        </div>
+                        <div class="stats">
+                            <div class="stat points">⭐ Toplam: ${userPoints.coding + userPoints.english + userPoints.german} puan</div>
+                            <div class="stat points">💻 ${userPoints.coding}</div>
+                            <div class="stat points">🇬🇧 ${userPoints.english}</div>
+                            <div class="stat points">🇩🇪 ${userPoints.german}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="category-selector">
+                        <button class="cat-btn coding ${currentCategory === 'coding' ? 'active' : ''}" onclick="selectCategory('coding')">
+                            💻 Kodlama
+                        </button>
+                        <button class="cat-btn english ${currentCategory === 'english' ? 'active' : ''}" onclick="selectCategory('english')">
+                            🇬🇧 İngilizce
+                        </button>
+                        <button class="cat-btn german ${currentCategory === 'german' ? 'active' : ''}" onclick="selectCategory('german')">
+                            🇩🇪 Almanca
+                        </button>
+                    </div>
+                    
+                    <h2 style="color: white; text-align: center; margin-bottom: 20px;">📖 Seviye Seç - ${getCategoryName()}</h2>
+                    <div class="levels-grid">
+                        ${[1,2,3,4,5].map(level => `
+                            <div class="level-card ${!unlockedLevels[currentCategory].includes(level) ? 'locked' : ''}" 
+                                 onclick="${unlockedLevels[currentCategory].includes(level) ? `startLevel(${level})` : ''}">
+                                <div class="level-number">${level}</div>
+                                <div class="level-name">${levelNames[level-1]}</div>
+                                <div class="level-desc">${levelDescs[level-1]}</div>
+                                ${!unlockedLevels[currentCategory].includes(level) ? '<div class="lock-icon">🔒</div>' : '<div class="lock-icon">🔓</div>'}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderQuestion() {
+            const q = currentQuestions[currentQuestionIndex];
+            app.innerHTML = `
+                <div class="container">
+                    <div class="question-container">
+                        <div class="question-header">
+                            <span>${getCategoryName()} • Seviye ${currentLevel}</span>
+                            <span>Soru ${currentQuestionIndex + 1}/${currentQuestions.length}</span>
+                            <span>⭐ ${score} puan</span>
+                        </div>
+                        <div class="question-text">${q.text}</div>
+                        <div class="options">
+                            ${q.options.map((opt, idx) => `
+                                <div class="option" onclick="checkAnswer(${idx})">
+                                    ${String.fromCharCode(65+idx)}. ${opt}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div id="feedback"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderResult() {
+            const percentage = (score / (currentQuestions.length * 10)) * 100;
+            const stars = percentage >= 90 ? '⭐⭐⭐⭐⭐' : percentage >= 70 ? '⭐⭐⭐⭐' : percentage >= 50 ? '⭐⭐⭐' : percentage >= 30 ? '⭐⭐' : '⭐';
+            const message = percentage >= 70 ? '🎉 Harika! Bir sonraki seviyeye geçebilirsin!' : '📚 Tekrar dene, daha iyi yapabilirsin!';
+            
+            app.innerHTML = `
+                <div class="container">
+                    <div class="result-card">
+                        ${logoHtml}
+                        <h2>🎓 ${getCategoryName()} Seviye ${currentLevel} Tamamlandı!</h2>
+                        <div class="result-score">${score}/${currentQuestions.length * 10}</div>
+                        <div class="stars">${stars}</div>
+                        <p>${message}</p>
+                        <button onclick="finishLevel()">🏠 Ana Menüye Dön</button>
+                        ${percentage >= 70 && currentLevel < 5 ? `<button onclick="nextLevel()" style="background: #4CAF50;">🚀 Sonraki Seviye →</button>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        window.selectCategory = (category) => {
+            currentCategory = category;
+            currentLevel = null;
+            render();
+        };
+
+        window.startLevel = (level) => {
+            currentLevel = level;
+            currentQuestions = getRandomQuestions(currentCategory, level, 5);
+            currentQuestionIndex = 0;
+            score = 0;
+            render();
+        };
+
+        window.checkAnswer = (selectedIndex) => {
+            const q = currentQuestions[currentQuestionIndex];
+            const isCorrect = selectedIndex === q.correct;
+            const optionsDivs = document.querySelectorAll('.option');
+            
+            optionsDivs.forEach(div => div.style.pointerEvents = 'none');
+            
+            if (isCorrect) {
+                score += 10;
+                optionsDivs[selectedIndex].classList.add('correct');
+                document.getElementById('feedback').innerHTML = `
+                    <div class="feedback" style="background: #e8f5e9;">
+                        ✅ Doğru! +10 puan<br>
+                        <small>📖 ${q.explanation}</small>
+                    </div>
+                `;
+            } else {
+                optionsDivs[selectedIndex].classList.add('wrong');
+                optionsDivs[q.correct].classList.add('correct');
+                document.getElementById('feedback').innerHTML = `
+                    <div class="feedback" style="background: #ffebee;">
+                        ❌ Yanlış! Doğru cevap: ${q.options[q.correct]}<br>
+                        <small>📖 ${q.explanation}</small>
+                    </div>
+                `;
+            }
+            
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < currentQuestions.length) {
+                    renderQuestion();
+                } else {
+                    savePoints();
+                    checkAndUnlockNextLevel();
+                    render();
+                }
+            }, 2000);
+        };
+
+        window.finishLevel = () => {
+            currentLevel = null;
+            render();
+        };
+
+        window.nextLevel = () => {
+            if (currentLevel + 1 <= 5 && unlockedLevels[currentCategory].includes(currentLevel + 1)) {
+                startLevel(currentLevel + 1);
+            } else {
+                finishLevel();
+            }
+        };
+
+        render();
+    </script>
+</body>
+</html>
