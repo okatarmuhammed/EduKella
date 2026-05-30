@@ -1,4 +1,4 @@
-const CACHE = 'edukella-v1';
+const CACHE = 'educate-v1';
 const ASSETS = [
   './',
   './index.html',

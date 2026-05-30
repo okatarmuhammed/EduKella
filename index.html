@@ -8,8 +8,8 @@
 <meta name="theme-color" content="#667eea">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon.svg">
-<meta name="apple-mobile-web-app-title" content="EduKella">
-<title>EduKella</title>
+<meta name="apple-mobile-web-app-title" content="EduCate">
+<title>EduCate</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -712,22 +712,22 @@ let state = {
 // ============================================================
 function loadPersist() {
   return {
-    xp:       parseInt(localStorage.getItem('edukella_xp')      || '0'),
-    streak:   parseInt(localStorage.getItem('edukella_streak')  || '1'),
-    hearts:   parseInt(localStorage.getItem('edukella_hearts')  || '5'),
-    unlocked: JSON.parse(localStorage.getItem('edukella_unlocked') || '{"coding":[1],"english":[1],"german":[1]}'),
-    premium:  localStorage.getItem('edukella_premium') === 'true',
-    stars:    JSON.parse(localStorage.getItem('edukella_stars') || '{}'),
+    xp:       parseInt(localStorage.getItem('educate_xp')      || '0'),
+    streak:   parseInt(localStorage.getItem('educate_streak')  || '1'),
+    hearts:   parseInt(localStorage.getItem('educate_hearts')  || '5'),
+    unlocked: JSON.parse(localStorage.getItem('educate_unlocked') || '{"coding":[1],"english":[1],"german":[1]}'),
+    premium:  localStorage.getItem('educate_premium') === 'true',
+    stars:    JSON.parse(localStorage.getItem('educate_stars') || '{}'),
   };
 }
 
 function savePersist(p) {
-  localStorage.setItem('edukella_xp',       p.xp);
-  localStorage.setItem('edukella_streak',   p.streak);
-  localStorage.setItem('edukella_hearts',   p.hearts);
-  localStorage.setItem('edukella_unlocked', JSON.stringify(p.unlocked));
-  localStorage.setItem('edukella_premium',  p.premium);
-  localStorage.setItem('edukella_stars',    JSON.stringify(p.stars));
+  localStorage.setItem('educate_xp',       p.xp);
+  localStorage.setItem('educate_streak',   p.streak);
+  localStorage.setItem('educate_hearts',   p.hearts);
+  localStorage.setItem('educate_unlocked', JSON.stringify(p.unlocked));
+  localStorage.setItem('educate_premium',  p.premium);
+  localStorage.setItem('educate_stars',    JSON.stringify(p.stars));
 }
 
 let persist = loadPersist();
@@ -812,7 +812,7 @@ function render() {
 function renderSplash() {
   return `<div class="splash">
     <div class="splash-logo">🎓</div>
-    <div class="splash-title">EduKella</div>
+    <div class="splash-title">EduCate</div>
     <div class="splash-sub">Öğrenmenin en eğlenceli yolu</div>
     <div class="splash-loader"><div class="splash-loader-bar"></div></div>
   </div>`;
@@ -838,7 +838,7 @@ function renderHome() {
 
   return `<div class="home">
     <div class="header">
-      <div class="header-logo">EduKella</div>
+      <div class="header-logo">EduCate</div>
       <div class="header-stats">
         <div class="stat-chip">🔥 ${persist.streak}</div>
         <div class="stat-chip">❤️ ${persist.hearts}</div>
