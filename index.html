@@ -1,953 +1,1374 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduCate - Kodlama & Dil Öğrenimi</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#667eea">
+<link rel="manifest" href="manifest.json">
+<title>EduKella</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a1a;
+    --bg2: #0f0f2a;
+    --purple: #667eea;
+    --purple2: #764ba2;
+    --pink: #f093fb;
+    --pink2: #f5576c;
+    --blue: #4facfe;
+    --blue2: #00f2fe;
+    --gold: #ffd700;
+    --green: #00e676;
+    --red: #ff5252;
+    --text: #ffffff;
+    --text2: rgba(255,255,255,0.7);
+    --text3: rgba(255,255,255,0.4);
+    --glass: rgba(255,255,255,0.08);
+    --glass2: rgba(255,255,255,0.12);
+    --border: rgba(255,255,255,0.15);
+    --shadow: 0 8px 32px rgba(0,0,0,0.4);
+    --spring: cubic-bezier(0.34,1.56,0.64,1);
+    --ease: cubic-bezier(0.4,0,0.2,1);
+    --max: 480px;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-            min-height: 100vh;
-        }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-        }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-x: hidden;
+  }
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-        }
+  #particles {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.15;
+    animation: drift linear infinite;
+  }
 
-        /* SENİN VERDİĞİN LOGO - SADECE KENARLARI YUVARLAK */
-        .logo-image {
-            width: 50px;
-            height: 50px;
-            border-radius: 15px;  /* Kenarları yuvarlatıldı */
-            animation: float 3s ease-in-out infinite;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            background: white;
-            padding: 8px;
-        }
+  @keyframes drift {
+    0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.15; }
+    90% { opacity: 0.1; }
+    100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+  }
 
-        .logo-text {
-            font-size: 28px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-        }
+  #app-wrapper {
+    width: 100%;
+    max-width: var(--max);
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 0 80px rgba(102,126,234,0.3), 0 0 160px rgba(118,75,162,0.15);
+    background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
+    overflow: hidden;
+  }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+  #app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-        .header {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 50px;
-            padding: 12px 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
+  @keyframes slideUp {
+    from { transform: translateY(60px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+  @keyframes popIn {
+    from { transform: scale(0.7); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    15%     { transform: translateX(-8px); }
+    30%     { transform: translateX(8px); }
+    45%     { transform: translateX(-6px); }
+    60%     { transform: translateX(6px); }
+    75%     { transform: translateX(-3px); }
+    90%     { transform: translateX(3px); }
+  }
+  @keyframes floatXP {
+    0%   { transform: translateY(0);    opacity: 1; }
+    100% { transform: translateY(-60px); opacity: 0; }
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg);    opacity: 1; }
+    100% { transform: translateY(110vh)  rotate(720deg); opacity: 0; }
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(102,126,234,0.4); }
+    50%     { box-shadow: 0 0 0 12px rgba(102,126,234,0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes logoReveal {
+    0%   { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+    60%  { transform: scale(1.1) rotate(2deg);  opacity: 1; }
+    100% { transform: scale(1)   rotate(0deg);  opacity: 1; }
+  }
+  @keyframes wordmark {
+    0%   { opacity: 0; letter-spacing: 0.5em; }
+    100% { opacity: 1; letter-spacing: 0.05em; }
+  }
+  @keyframes starPop {
+    0%   { transform: scale(0) rotate(-30deg); opacity: 0; }
+    60%  { transform: scale(1.3) rotate(5deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg);   opacity: 1; }
+  }
+  @keyframes xpBarGrow {
+    from { width: 0; }
+    to   { width: 100%; }
+  }
+  @keyframes comboIn {
+    0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+    70%  { transform: scale(1.2) rotate(5deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg);   opacity: 1; }
+  }
+  @keyframes optionIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes correctFlash {
+    0%,100% { box-shadow: 0 0 20px rgba(0,230,118,0.3); }
+    50%     { box-shadow: 0 0 40px rgba(0,230,118,0.6); }
+  }
+  @keyframes wrongShake {
+    0%,100% { transform: translateX(0); }
+    20%     { transform: translateX(-8px); }
+    40%     { transform: translateX(8px); }
+    60%     { transform: translateX(-5px); }
+    80%     { transform: translateX(5px); }
+  }
 
-        .stats {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
+  /* ---- SPLASH ---- */
+  .splash {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 100vh; gap: 24px;
+    background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #0a1a2e 100%);
+    animation: fadeIn 0.3s ease;
+  }
+  .splash-logo {
+    font-size: 80px; animation: logoReveal 0.8s var(--spring) forwards;
+    filter: drop-shadow(0 0 30px rgba(102,126,234,0.8));
+  }
+  .splash-title {
+    font-size: 42px; font-weight: 900; letter-spacing: 0.05em;
+    background: linear-gradient(135deg, #667eea, #f093fb, #4facfe);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    animation: wordmark 0.6s ease 0.5s both;
+  }
+  .splash-sub {
+    color: var(--text2); font-size: 14px; font-weight: 400;
+    animation: fadeIn 0.5s ease 1s both;
+  }
+  .splash-loader {
+    width: 60px; height: 4px; background: var(--glass2); border-radius: 2px; overflow: hidden;
+    animation: fadeIn 0.5s ease 1s both; margin-top: 8px;
+  }
+  .splash-loader-bar {
+    height: 100%; width: 0; background: linear-gradient(90deg, var(--purple), var(--pink));
+    border-radius: 2px; animation: xpBarGrow 1.4s ease 1.1s forwards;
+  }
 
-        .stat {
-            background: #f5f5f5;
-            padding: 8px 18px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+  /* ---- HEADER ---- */
+  .header {
+    padding: calc(16px + var(--safe-top)) 20px 16px;
+    display: flex; align-items: center; gap: 12px;
+    background: var(--glass); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-logo {
+    font-size: 28px; font-weight: 900;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    flex: 1;
+  }
+  .header-stats { display: flex; align-items: center; gap: 10px; }
+  .stat-chip {
+    display: flex; align-items: center; gap: 4px; padding: 6px 10px;
+    background: var(--glass2); border: 1px solid var(--border); border-radius: 20px;
+    font-size: 13px; font-weight: 600;
+  }
+  .xp-bar-wrap {
+    padding: 8px 20px 12px; background: var(--glass); border-bottom: 1px solid var(--border);
+  }
+  .xp-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; font-weight: 500; }
+  .xp-bar-bg {
+    height: 8px; background: var(--glass2); border-radius: 4px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .xp-bar-fill {
+    height: 100%; border-radius: 4px;
+    background: linear-gradient(90deg, var(--purple), var(--pink));
+    transition: width 0.8s var(--ease);
+    box-shadow: 0 0 10px rgba(102,126,234,0.6);
+  }
 
-        .streak { color: #FF9800; font-weight: bold; }
-        .points { color: #4CAF50; font-weight: bold; }
+  /* ---- HOME ---- */
+  .home { animation: slideUp 0.4s var(--spring); flex: 1; }
+  .home-body { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+  .section-label {
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text3); margin-bottom: 10px;
+  }
+  .daily-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .daily-card {
+    background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border);
+    border-radius: 16px; padding: 14px; text-align: center;
+    transition: transform 0.3s var(--spring);
+  }
+  .daily-card:active { transform: scale(0.96); }
+  .daily-card-icon { font-size: 24px; margin-bottom: 4px; }
+  .daily-card-val { font-size: 20px; font-weight: 800; }
+  .daily-card-lbl { font-size: 10px; color: var(--text3); font-weight: 500; }
 
-        .category-selector {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
+  .category-card {
+    border-radius: 20px; padding: 24px 20px; cursor: pointer; position: relative; overflow: hidden;
+    transition: transform 0.3s var(--spring), box-shadow 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.2);
+    animation: slideUp 0.4s var(--spring) both;
+    margin-bottom: 12px;
+  }
+  .category-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(0,0,0,0.15); transition: opacity 0.3s;
+  }
+  .category-card:hover::before { opacity: 0; }
+  .category-card:active { transform: scale(0.97); }
+  .category-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+  .cat-emoji { font-size: 48px; margin-bottom: 8px; display: block; position: relative; z-index: 1; }
+  .cat-name { font-size: 22px; font-weight: 800; position: relative; z-index: 1; }
+  .cat-sub { font-size: 13px; opacity: 0.8; position: relative; z-index: 1; margin-top: 4px; }
+  .cat-progress {
+    margin-top: 14px; position: relative; z-index: 1;
+    height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; overflow: hidden;
+  }
+  .cat-progress-fill {
+    height: 100%; background: rgba(255,255,255,0.8); border-radius: 3px;
+    transition: width 0.8s var(--ease);
+  }
+  .cat-progress-label { font-size: 11px; opacity: 0.8; margin-top: 6px; position: relative; z-index: 1; }
 
-        .cat-btn {
-            flex: 1;
-            padding: 16px;
-            font-size: 16px;
-            font-weight: bold;
-            background: rgba(255,255,255,0.9);
-            color: #667eea;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            min-width: 120px;
-        }
+  /* ---- LEVEL MAP ---- */
+  .level-map { animation: slideUp 0.4s var(--spring); flex: 1; display: flex; flex-direction: column; }
+  .level-map-header {
+    padding: calc(16px + var(--safe-top)) 20px 16px;
+    display: flex; align-items: center; gap: 12px;
+    background: var(--glass); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .back-btn {
+    width: 36px; height: 36px; border-radius: 12px; border: 1px solid var(--border);
+    background: var(--glass2); display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 18px; transition: all 0.3s var(--spring); flex-shrink: 0;
+  }
+  .back-btn:active { transform: scale(0.9); }
+  .level-map-title { font-size: 20px; font-weight: 700; flex: 1; }
+  .level-map-body {
+    padding: 30px 20px calc(30px + var(--safe-bottom)); flex: 1;
+    display: flex; flex-direction: column; align-items: center;
+    overflow-y: auto;
+  }
+  .level-node-wrap {
+    display: flex; flex-direction: column; align-items: center;
+    width: 100%; max-width: 320px;
+  }
+  .level-connector {
+    width: 3px; height: 40px;
+    background: repeating-linear-gradient(to bottom, var(--border) 0, var(--border) 6px, transparent 6px, transparent 12px);
+  }
+  .level-node {
+    width: 100%; border-radius: 20px; padding: 18px 20px;
+    background: var(--glass); backdrop-filter: blur(20px); border: 1.5px solid var(--border);
+    cursor: pointer; transition: all 0.3s var(--spring); position: relative; overflow: hidden;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .level-node:hover { transform: translateX(4px); box-shadow: var(--shadow); }
+  .level-node:active { transform: scale(0.98); }
+  .level-node.unlocked { border-color: rgba(102,126,234,0.5); }
+  .level-node.locked { opacity: 0.6; }
+  .level-node.completed { border-color: rgba(0,230,118,0.5); }
+  .level-node-icon {
+    width: 52px; height: 52px; border-radius: 16px; display: flex; align-items: center;
+    justify-content: center; font-size: 26px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--purple), var(--purple2));
+  }
+  .level-node.completed .level-node-icon { background: linear-gradient(135deg, #00e676, #00b0ff); }
+  .level-node.locked .level-node-icon { background: linear-gradient(135deg, #333, #444); }
+  .level-node-info { flex: 1; min-width: 0; }
+  .level-node-name { font-size: 15px; font-weight: 700; }
+  .level-node-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .level-node-badge {
+    font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 8px;
+    background: rgba(102,126,234,0.2); color: var(--purple); border: 1px solid rgba(102,126,234,0.3);
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .level-node.completed .level-node-badge {
+    background: rgba(0,230,118,0.15); color: var(--green); border-color: rgba(0,230,118,0.3);
+  }
+  .level-node-lock { font-size: 20px; flex-shrink: 0; margin-left: 4px; }
+  .stars-row { display: flex; gap: 2px; margin-top: 4px; }
+  .star-sm { font-size: 12px; }
 
-        .cat-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            transform: scale(1.02);
-        }
+  /* ---- QUIZ ---- */
+  .quiz { animation: slideUp 0.4s var(--spring); flex: 1; display: flex; flex-direction: column; }
+  .quiz-header {
+    padding: calc(12px + var(--safe-top)) 20px 12px;
+    background: var(--glass); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+  }
+  .quiz-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .quiz-progress-bg {
+    flex: 1; height: 8px; background: var(--glass2); border-radius: 4px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .quiz-progress-fill {
+    height: 100%; border-radius: 4px;
+    background: linear-gradient(90deg, var(--purple), var(--pink));
+    transition: width 0.5s var(--ease);
+    box-shadow: 0 0 8px rgba(102,126,234,0.6);
+  }
+  .quiz-stats { display: flex; align-items: center; gap: 8px; }
+  .hearts-display { display: flex; gap: 3px; }
+  .heart { font-size: 18px; transition: all 0.3s var(--spring); display: inline-block; }
+  .heart.lost { opacity: 0.2; filter: grayscale(1); }
+  .heart.shake { animation: shake 0.5s ease; }
+  .combo-badge {
+    display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
+    background: linear-gradient(135deg, #ff6b35, #f7c59f);
+    color: #000; animation: comboIn 0.4s var(--spring);
+    box-shadow: 0 2px 12px rgba(255,107,53,0.5);
+  }
+  .quiz-body {
+    flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 14px;
+    overflow-y: auto; padding-bottom: calc(20px + var(--safe-bottom));
+  }
+  .question-num { font-size: 12px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+  .question-card {
+    background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border);
+    border-radius: 20px; padding: 22px; min-height: 110px; display: flex; align-items: center;
+    animation: popIn 0.4s var(--spring);
+  }
+  .question-text { font-size: 16px; font-weight: 600; line-height: 1.6; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    width: 100%; padding: 14px 16px; border-radius: 16px; border: 1.5px solid var(--border);
+    background: var(--glass); backdrop-filter: blur(20px); color: var(--text);
+    font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500;
+    cursor: pointer; text-align: left; transition: all 0.3s var(--spring);
+    display: flex; align-items: center; gap: 12px;
+    opacity: 0; transform: translateX(-20px);
+    animation: optionIn 0.4s var(--spring) forwards;
+  }
+  .option-letter {
+    width: 28px; height: 28px; border-radius: 8px; background: var(--glass2);
+    border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0; transition: all 0.3s ease;
+  }
+  .option-btn:hover:not(:disabled) { transform: translateX(4px); border-color: rgba(102,126,234,0.5); background: var(--glass2); }
+  .option-btn:active:not(:disabled) { transform: scale(0.98); }
+  .option-btn.correct {
+    border-color: var(--green); background: rgba(0,230,118,0.15);
+    transform: scale(1.02); box-shadow: 0 0 20px rgba(0,230,118,0.3);
+    animation: correctFlash 0.5s ease;
+  }
+  .option-btn.correct .option-letter { background: var(--green); border-color: var(--green); color: #000; }
+  .option-btn.wrong {
+    border-color: var(--red); background: rgba(255,82,82,0.15);
+    animation: wrongShake 0.5s ease;
+  }
+  .option-btn.wrong .option-letter { background: var(--red); border-color: var(--red); color: #fff; }
+  .explanation-card {
+    border-radius: 16px; padding: 14px 16px; font-size: 13px; line-height: 1.5;
+    animation: slideUp 0.4s var(--spring); border: 1px solid;
+  }
+  .explanation-card.correct-exp { background: rgba(0,230,118,0.1); border-color: rgba(0,230,118,0.3); color: #80ffb0; }
+  .explanation-card.wrong-exp { background: rgba(255,82,82,0.1); border-color: rgba(255,82,82,0.3); color: #ffaaaa; }
+  .next-btn {
+    padding: 16px 24px; border-radius: 16px; border: none;
+    background: linear-gradient(135deg, var(--purple), var(--purple2));
+    color: #fff; font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700;
+    cursor: pointer; width: 100%; transition: all 0.3s var(--spring);
+    box-shadow: 0 4px 20px rgba(102,126,234,0.4); animation: slideUp 0.4s var(--spring);
+  }
+  .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(102,126,234,0.5); }
+  .next-btn:active { transform: scale(0.97); }
 
-        .levels-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
+  /* floating XP */
+  .float-xp {
+    position: fixed; font-size: 18px; font-weight: 800; color: var(--gold);
+    pointer-events: none; z-index: 9999;
+    text-shadow: 0 0 20px rgba(255,215,0,0.8);
+    animation: floatXP 1.2s ease forwards;
+  }
 
-        .level-card {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 25px;
-            padding: 25px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+  /* ---- RESULT ---- */
+  .result {
+    animation: slideUp 0.4s var(--spring); flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 30px 20px calc(30px + var(--safe-bottom)); gap: 18px;
+  }
+  .result-emoji { font-size: 80px; animation: logoReveal 0.6s var(--spring); }
+  .result-title { font-size: 28px; font-weight: 900; text-align: center; }
+  .result-stars { display: flex; gap: 8px; justify-content: center; }
+  .result-star { font-size: 40px; opacity: 0; animation: starPop 0.5s var(--spring) forwards; }
+  .result-star.empty { filter: grayscale(1) brightness(0.3); }
+  .result-xp-card {
+    background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border);
+    border-radius: 20px; padding: 20px 30px; text-align: center; width: 100%; max-width: 320px;
+    animation: popIn 0.5s var(--spring) 0.3s both;
+  }
+  .result-xp-num { font-size: 36px; font-weight: 900; color: var(--gold); }
+  .result-xp-lbl { font-size: 13px; color: var(--text2); }
+  .result-score-row { display: flex; justify-content: center; gap: 24px; margin-top: 14px; }
+  .result-stat { text-align: center; }
+  .result-stat-val { font-size: 24px; font-weight: 800; }
+  .result-stat-lbl { font-size: 11px; color: var(--text3); }
+  .result-btns { display: flex; gap: 12px; width: 100%; max-width: 340px; }
+  .btn-secondary {
+    flex: 1; padding: 14px; border-radius: 16px; border: 1.5px solid var(--border);
+    background: var(--glass); color: var(--text); font-family: 'Poppins', sans-serif;
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s var(--spring);
+  }
+  .btn-secondary:hover { background: var(--glass2); transform: translateY(-2px); }
+  .btn-primary {
+    flex: 2; padding: 14px; border-radius: 16px; border: none;
+    background: linear-gradient(135deg, var(--purple), var(--purple2));
+    color: #fff; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.3s var(--spring); box-shadow: 0 4px 20px rgba(102,126,234,0.4);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(102,126,234,0.5); }
+  .btn-primary:active { transform: scale(0.97); }
 
-        .level-card:hover:not(.locked) {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
+  /* confetti */
+  .confetti-piece {
+    position: fixed; pointer-events: none; z-index: 9998;
+    animation: confettiFall linear forwards; border-radius: 2px;
+  }
 
-        .level-card.locked {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+  /* ---- NO HEARTS ---- */
+  .no-hearts {
+    animation: slideUp 0.4s var(--spring); flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 30px; gap: 18px; text-align: center;
+  }
+  .no-hearts-emoji { font-size: 80px; animation: pulse 1.5s ease infinite; }
+  .no-hearts-title { font-size: 28px; font-weight: 900; }
+  .no-hearts-sub { font-size: 14px; color: var(--text2); max-width: 280px; line-height: 1.6; }
 
-        .level-number {
-            font-size: 48px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+  /* ---- PAYWALL ---- */
+  .paywall-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+    z-index: 1000; display: flex; align-items: flex-end; justify-content: center;
+    animation: fadeIn 0.3s ease; padding-bottom: var(--safe-bottom);
+  }
+  .paywall-sheet {
+    width: 100%; max-width: var(--max); background: #13132a;
+    border-radius: 28px 28px 0 0; border-top: 1px solid var(--border);
+    padding: 28px 24px 32px; animation: slideUp 0.4s var(--spring);
+    max-height: 90vh; overflow-y: auto;
+  }
+  .paywall-handle {
+    width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px;
+  }
+  .paywall-crown { font-size: 48px; text-align: center; margin-bottom: 8px; animation: logoReveal 0.5s var(--spring); }
+  .paywall-title { font-size: 24px; font-weight: 900; text-align: center; margin-bottom: 4px; }
+  .paywall-sub { font-size: 14px; color: var(--text2); text-align: center; margin-bottom: 24px; line-height: 1.5; }
+  .paywall-features { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .paywall-feature {
+    display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+    background: var(--glass); border: 1px solid var(--border); border-radius: 14px;
+    font-size: 14px; font-weight: 500;
+  }
+  .paywall-feature-icon { font-size: 20px; flex-shrink: 0; }
+  .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .plan-card {
+    border-radius: 18px; padding: 18px 14px; border: 2px solid var(--border);
+    background: var(--glass); cursor: pointer; transition: all 0.3s var(--spring);
+    position: relative; text-align: center;
+  }
+  .plan-card:hover { transform: translateY(-3px); border-color: var(--purple); }
+  .plan-card.popular { border-color: var(--gold); background: rgba(255,215,0,0.06); }
+  .plan-card.selected { border-color: var(--purple); background: rgba(102,126,234,0.12); }
+  .plan-card.popular.selected { border-color: var(--gold); }
+  .plan-badge {
+    position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--gold), #ffaa00);
+    color: #000; font-size: 10px; font-weight: 800; padding: 3px 10px; border-radius: 10px;
+    white-space: nowrap;
+  }
+  .plan-period { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+  .plan-price { font-size: 28px; font-weight: 900; }
+  .plan-price-sub { font-size: 10px; color: var(--text3); margin-top: 2px; }
+  .buy-btn {
+    width: 100%; padding: 16px; border-radius: 16px; border: none;
+    font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700;
+    cursor: pointer; transition: all 0.3s var(--spring); margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--gold), #ffaa00);
+    color: #000; box-shadow: 0 4px 20px rgba(255,215,0,0.3);
+  }
+  .buy-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,215,0,0.4); }
+  .paywall-close {
+    width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border);
+    border-radius: 14px; color: var(--text2); font-family: 'Poppins', sans-serif;
+    font-size: 14px; cursor: pointer; transition: all 0.3s ease;
+  }
+  .paywall-close:hover { background: var(--glass); }
 
-        .level-name {
-            font-size: 16px;
-            font-weight: bold;
-            margin: 10px 0;
-            color: #333;
-        }
+  @media (min-width: 481px) {
+    .paywall-overlay { align-items: center; }
+    .paywall-sheet { border-radius: 28px; max-height: 85vh; }
+    body { background: #050510; align-items: center; min-height: 100vh; }
+    #app-wrapper { margin: 20px 0; min-height: calc(100vh - 40px); border-radius: 32px; }
+  }
 
-        .level-desc {
-            font-size: 12px;
-            color: #666;
-        }
-
-        .lock-icon {
-            font-size: 20px;
-            margin-top: 10px;
-        }
-
-        .question-container {
-            background: white;
-            border-radius: 30px;
-            padding: 40px;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .question-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        .question-text {
-            font-size: 22px;
-            margin-bottom: 30px;
-            line-height: 1.4;
-        }
-
-        .options {
-            display: grid;
-            gap: 12px;
-            margin: 30px 0;
-        }
-
-        .option {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-
-        .option:hover {
-            background: #e0e0e0;
-            transform: translateX(5px);
-        }
-
-        .option.correct {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .option.wrong {
-            background: #FF5252;
-            color: white;
-        }
-
-        .feedback {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 12px;
-        }
-
-        .result-card {
-            background: white;
-            border-radius: 30px;
-            padding: 40px;
-            text-align: center;
-            max-width: 500px;
-            margin: 50px auto;
-        }
-
-        .result-score {
-            font-size: 72px;
-            font-weight: bold;
-            color: #667eea;
-            margin: 20px 0;
-        }
-
-        .stars {
-            font-size: 48px;
-            margin: 20px 0;
-        }
-
-        button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 5px;
-        }
-
-        button:hover {
-            background: #5a67d8;
-            transform: scale(1.02);
-        }
-
-        /* PAYWALL OVERLAY */
-        .paywall-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(6px);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .paywall-card {
-            background: white;
-            border-radius: 30px;
-            padding: 40px;
-            max-width: 480px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
-            animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
-        }
-
-        @keyframes popIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to   { transform: scale(1);   opacity: 1; }
-        }
-
-        .paywall-crown { font-size: 56px; margin-bottom: 10px; }
-
-        .paywall-title {
-            font-size: 26px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
-        }
-
-        .paywall-sub {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 28px;
-        }
-
-        .paywall-features {
-            text-align: left;
-            background: #f9f9ff;
-            border-radius: 16px;
-            padding: 18px 22px;
-            margin-bottom: 28px;
-            list-style: none;
-        }
-
-        .paywall-features li {
-            padding: 6px 0;
-            color: #444;
-            font-size: 14px;
-        }
-
-        .paywall-features li::before {
-            content: "✅ ";
-        }
-
-        .plans {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-bottom: 24px;
-        }
-
-        .plan {
-            border: 2px solid #e0e0e0;
-            border-radius: 18px;
-            padding: 18px 12px;
-            cursor: pointer;
-            transition: all 0.25s;
-            position: relative;
-        }
-
-        .plan:hover { border-color: #667eea; }
-
-        .plan.selected {
-            border-color: #667eea;
-            background: #f0f0ff;
-        }
-
-        .plan-badge {
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 3px 10px;
-            border-radius: 20px;
-            white-space: nowrap;
-        }
-
-        .plan-period {
-            font-size: 13px;
-            color: #888;
-            margin-bottom: 6px;
-        }
-
-        .plan-price {
-            font-size: 28px;
-            font-weight: 800;
-            color: #333;
-        }
-
-        .plan-price span {
-            font-size: 15px;
-            font-weight: 500;
-            color: #888;
-        }
-
-        .plan-saving {
-            font-size: 11px;
-            color: #4CAF50;
-            font-weight: 600;
-            margin-top: 4px;
-        }
-
-        .btn-buy {
-            width: 100%;
-            padding: 16px;
-            font-size: 17px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 0;
-        }
-
-        .btn-buy:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 25px rgba(102,126,234,0.5);
-        }
-
-        .paywall-dismiss {
-            margin-top: 14px;
-            background: none;
-            color: #aaa;
-            font-size: 13px;
-            padding: 6px 12px;
-            border: none;
-            cursor: pointer;
-        }
-
-        .paywall-dismiss:hover {
-            color: #666;
-            background: none;
-            transform: none;
-        }
-
-        .premium-badge {
-            background: linear-gradient(135deg, #f7971e, #ffd200);
-            color: #7a4f00;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 3px 9px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-left: 6px;
-        }
-
-        /* Success modal */
-        .success-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .success-card {
-            background: white;
-            border-radius: 30px;
-            padding: 50px 40px;
-            text-align: center;
-            max-width: 380px;
-            animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
-        }
-
-        @media (max-width: 768px) {
-            .header { flex-direction: column; }
-            .levels-grid { grid-template-columns: 1fr; }
-            .question-text { font-size: 18px; }
-            .plans { grid-template-columns: 1fr; }
-        }
-    </style>
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
 </head>
 <body>
-    <div id="app"></div>
+<div id="particles"></div>
+<div id="app-wrapper">
+  <div id="app"></div>
+</div>
 
-    <script>
-        // ==================== SENİN LOGON (SADECE KENARLARI YUVARLAK) ====================
-        // Molekül/logogram şeklindeki logon - Kenarları yuvarlatılmış hali
-        const logoHtml = `<img class="logo-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' stroke='%23667eea' stroke-width='3' fill='none'/%3E%3Ccircle cx='50' cy='30' r='8' fill='%23667eea'/%3E%3Ccircle cx='30' cy='50' r='8' fill='%23764ba2'/%3E%3Ccircle cx='50' cy='70' r='8' fill='%23667eea'/%3E%3Ccircle cx='70' cy='50' r='8' fill='%23764ba2'/%3E%3Cline x1='42' y1='36' x2='38' y2='44' stroke='%23667eea' stroke-width='2'/%3E%3Cline x1='58' y1='36' x2='62' y2='44' stroke='%23764ba2' stroke-width='2'/%3E%3Cline x1='38' y1='56' x2='42' y2='64' stroke='%23667eea' stroke-width='2'/%3E%3Cline x1='62' y1='56' x2='58' y2='64' stroke='%23764ba2' stroke-width='2'/%3E%3C/svg%3E" alt="EduCate Logo">`;
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const codingQuestions = {
+    1: [
+        { text: "Python'da ekrana yazı yazdırmak için hangi fonksiyon kullanılır?", options: ["print()", "write()", "echo()", "console.log()"], correct: 0, explanation: "print() Python'da ekrana çıktı vermek için kullanılır." },
+        { text: "Java'da main metodunun doğru yazımı hangisidir?", options: ["public static void main(String[] args)", "public void main()", "static void main()", "void main()"], correct: 0, explanation: "public static void main(String[] args) Java'nın giriş noktasıdır." },
+        { text: "Python'da değişken tipini öğrenmek için hangi fonksiyon kullanılır?", options: ["type()", "typeof()", "getType()", "varType()"], correct: 0, explanation: "type() fonksiyonu değişkenin tipini döndürür." },
+        { text: "Java'da 'int' kaç byte'tır?", options: ["2", "4", "8", "16"], correct: 1, explanation: "int Java'da 4 byte (32 bit) yer kaplar." },
+        { text: "Python'da yorum satırı nasıl yazılır?", options: ["//", "/* */", "#", "<!-- -->"], correct: 2, explanation: "# işareti Python'da yorum satırı için kullanılır." },
+        { text: "Java'da yorum satırı nasıl yazılır?", options: ["#", "//", "<!-- -->", "**"], correct: 1, explanation: "// tek satırlık yorum için, /* */ çok satırlık için kullanılır." },
+        { text: "Python'da 'elif' ne işe yarar?", options: ["Else if", "Else", "If", "Loop"], correct: 0, explanation: "elif = else if, çoklu koşul kontrolü için kullanılır." },
+        { text: "Java'da '==' operatörü string'lerde neyi karşılaştırır?", options: ["Değeri", "Referansı", "Uzunluğu", "Hash kodunu"], correct: 1, explanation: "String'lerde == referans karşılaştırması yapar." },
+        { text: "Python'da 'for' döngüsü hangi veri tipinde gezebilir?", options: ["Liste", "String", "Range", "Hepsi"], correct: 3, explanation: "for döngüsü iterable tüm veri tiplerinde gezebilir." },
+        { text: "Java'da 'ArrayList' hangi pakettedir?", options: ["java.util", "java.lang", "java.collections", "java.list"], correct: 0, explanation: "ArrayList java.util paketindedir." },
+        { text: "Python'da None neyi ifade eder?", options: ["0", "Boş değer", "False", "Null"], correct: 1, explanation: "None = hiçlik, boş değer anlamına gelir." },
+        { text: "Java'da 'null' ne ifade eder?", options: ["0", "Boş referans", "false", "Hata"], correct: 1, explanation: "null, bir nesnenin hiçbir şeyi işaret etmediğini gösterir." },
+        { text: "Python'da listeler hangi parantezle tanımlanır?", options: ["()", "[]", "{}", "<>"], correct: 1, explanation: "Listeler köşeli parantezle tanımlanır." },
+        { text: "Java'da 'final' anahtar kelimesi ne işe yarar?", options: ["Değişmez yapar", "Kalıtım sağlar", "Polimorfizm yapar", "Soyut yapar"], correct: 0, explanation: "final değişkenlerde sabit yapar." },
+        { text: "print(type(True)) Python'da çıktısı nedir?", options: ["bool", "int", "str", "True"], correct: 0, explanation: "True ve False bool tipindedir." }
+    ],
+    2: [
+        { text: "Python'da 'append()' hangi veri tipinin metodudur?", options: ["String", "List", "Tuple", "Dict"], correct: 1, explanation: "append() listelere eleman eklemek için kullanılır." },
+        { text: "Java'da 'extends' ne işe yarar?", options: ["Arayüz", "Kalıtım", "Paket", "Dizi"], correct: 1, explanation: "extends bir sınıfın başka bir sınıftan miras almasını sağlar." },
+        { text: "Python'da lambda ifadesi nedir?", options: ["Döngü", "İsimsiz fonksiyon", "Sınıf", "Modül"], correct: 1, explanation: "Lambda = tek satırlık isimsiz fonksiyon." },
+        { text: "Java'da 'override' nedir?", options: ["Metodu yeniden yazma", "Metodu gizleme", "Metodu silme", "Metodu çağırma"], correct: 0, explanation: "Override, alt sınıfın üst sınıf metodunu yeniden tanımlamasıdır." },
+        { text: "Python'da 'break' ne işe yarar?", options: ["Döngüyü durdurur", "Döngüyü atlar", "Hata verir", "Yeniden başlatır"], correct: 0, explanation: "break döngüden çıkmak için kullanılır." }
+    ],
+    3: [
+        { text: "Python'da 'try-except' ne için kullanılır?", options: ["Döngü", "Koşul", "Hata yönetimi", "Fonksiyon"], correct: 2, explanation: "try-except hata yakalama için kullanılır." },
+        { text: "Java'da 'interface' nedir?", options: ["Soyut sınıf", "Sadece metod imzaları", "Concrete sınıf", "Enum"], correct: 1, explanation: "Interface sadece metod imzaları ve sabitleri içerir." },
+        { text: "Python'da 'map()' fonksiyonu ne yapar?", options: ["Sıralar", "Filtreler", "Dönüştürür", "Birleştirir"], correct: 2, explanation: "map() her elemana fonksiyon uygular." }
+    ],
+    4: [
+        { text: "Python'da decorator nedir?", options: ["Süsleyici", "Fonksiyon sarmalayıcı", "Sınıf", "Modül"], correct: 1, explanation: "Decorator'lar fonksiyonları sarmalayıp özellik ekler." },
+        { text: "Java'da 'generics' ne işe yarar?", options: ["Tip güvenliği", "Döngü", "Dizi", "String"], correct: 0, explanation: "Generics tip güvenliği sağlar." }
+    ],
+    5: [
+        { text: "Python'da GIL nedir?", options: ["Global Interpreter Lock", "Graphic Library", "General Input Logic", "Green Island Loop"], correct: 0, explanation: "GIL, CPython'da thread'leri kısıtlayan mekanizmadır." },
+        { text: "Java'da 'JVM' nedir?", options: ["Java Virtual Machine", "Java Variable Memory", "Java Visual Mode", "Java Version Manager"], correct: 0, explanation: "JVM, Java bytecode'unu çalıştıran sanal makinedir." }
+    ]
+};
 
-        // ==================== SORU HAVUZU ====================
-        
-        // KODLAMA SORULARI (Python + Java karışık)
-        const codingQuestions = {
-            1: [ // Seviye 1 - Başlangıç
-                { text: "Python'da ekrana yazı yazdırmak için hangi fonksiyon kullanılır?", options: ["print()", "write()", "echo()", "console.log()"], correct: 0, explanation: "print() Python'da ekrana çıktı vermek için kullanılır." },
-                { text: "Java'da main metodunun doğru yazımı hangisidir?", options: ["public static void main(String[] args)", "public void main()", "static void main()", "void main()"], correct: 0, explanation: "public static void main(String[] args) Java'nın giriş noktasıdır." },
-                { text: "Python'da değişken tipini öğrenmek için hangi fonksiyon kullanılır?", options: ["type()", "typeof()", "getType()", "varType()"], correct: 0, explanation: "type() fonksiyonu değişkenin tipini döndürür." },
-                { text: "Java'da 'int' kaç byte'tır?", options: ["2", "4", "8", "16"], correct: 1, explanation: "int Java'da 4 byte (32 bit) yer kaplar." },
-                { text: "Python'da yorum satırı nasıl yazılır?", options: ["//", "/* */", "#", "<!-- -->"], correct: 2, explanation: "# işareti Python'da yorum satırı için kullanılır." },
-                { text: "Java'da yorum satırı nasıl yazılır?", options: ["#", "//", "<!-- -->", "**"], correct: 1, explanation: "// tek satırlık yorum için, /* */ çok satırlık için kullanılır." },
-                { text: "Python'da 'elif' ne işe yarar?", options: ["Else if", "Else", "If", "Loop"], correct: 0, explanation: "elif = else if, çoklu koşul kontrolü için kullanılır." },
-                { text: "Java'da '==' operatörü string'lerde neyi karşılaştırır?", options: ["Değeri", "Referansı", "Uzunluğu", "Hash kodunu"], correct: 1, explanation: "String'lerde == referans karşılaştırması yapar." },
-                { text: "Python'da 'for' döngüsü hangi veri tipinde gezebilir?", options: ["Liste", "String", "Range", "Hepsi"], correct: 3, explanation: "for döngüsü iterable tüm veri tiplerinde gezebilir." },
-                { text: "Java'da 'ArrayList' hangi pakettedir?", options: ["java.util", "java.lang", "java.collections", "java.list"], correct: 0, explanation: "ArrayList java.util paketindedir." },
-                { text: "Python'da None neyi ifade eder?", options: ["0", "Boş değer", "False", "Null"], correct: 1, explanation: "None = hiçlik, boş değer anlamına gelir." },
-                { text: "Java'da 'null' ne ifade eder?", options: ["0", "Boş referans", "false", "Hata"], correct: 1, explanation: "null, bir nesnenin hiçbir şeyi işaret etmediğini gösterir." },
-                { text: "Python'da listeler hangi parantezle tanımlanır?", options: ["()", "[]", "{}", "<>"], correct: 1, explanation: "Listeler köşeli parantezle tanımlanır." },
-                { text: "Java'da 'final' anahtar kelimesi ne işe yarar?", options: ["Değişmez yapar", "Kalıtım sağlar", "Polimorfizm yapar", "Soyut yapar"], correct: 0, explanation: "final değişkenlerde sabit yapar." },
-                { text: "print(type(True)) Python'da çıktısı nedir?", options: ["bool", "int", "str", "True"], correct: 0, explanation: "True ve False bool tipindedir." }
-            ],
-            2: [ // Seviye 2 - Kolay
-                { text: "Python'da 'append()' hangi veri tipinin metodudur?", options: ["String", "List", "Tuple", "Dict"], correct: 1, explanation: "append() listelere eleman eklemek için kullanılır." },
-                { text: "Java'da 'extends' ne işe yarar?", options: ["Arayüz", "Kalıtım", "Paket", "Dizi"], correct: 1, explanation: "extends bir sınıfın başka bir sınıftan miras almasını sağlar." },
-                { text: "Python'da lambda ifadesi nedir?", options: ["Döngü", "İsimsiz fonksiyon", "Sınıf", "Modül"], correct: 1, explanation: "Lambda = tek satırlık isimsiz fonksiyon." },
-                { text: "Java'da 'override' nedir?", options: ["Metodu yeniden yazma", "Metodu gizleme", "Metodu silme", "Metodu çağırma"], correct: 0, explanation: "Override, alt sınıfın üst sınıf metodunu yeniden tanımlamasıdır." },
-                { text: "Python'da 'break' ne işe yarar?", options: ["Döngüyü durdurur", "Döngüyü atlar", "Hata verir", "Yeniden başlatır"], correct: 0, explanation: "break döngüden çıkmak için kullanılır." }
-            ],
-            3: [ // Seviye 3 - Orta
-                { text: "Python'da 'try-except' ne için kullanılır?", options: ["Döngü", "Koşul", "Hata yönetimi", "Fonksiyon"], correct: 2, explanation: "try-except hata yakalama için kullanılır." },
-                { text: "Java'da 'interface' nedir?", options: ["Soyut sınıf", "Sadece metod imzaları", "Concrete sınıf", "Enum"], correct: 1, explanation: "Interface sadece metod imzaları ve sabitleri içerir." },
-                { text: "Python'da 'map()' fonksiyonu ne yapar?", options: ["Sıralar", "Filtreler", "Dönüştürür", "Birleştirir"], correct: 2, explanation: "map() her elemana fonksiyon uygular." }
-            ],
-            4: [ // Seviye 4 - İleri
-                { text: "Python'da decorator nedir?", options: ["Süsleyici", "Fonksiyon sarmalayıcı", "Sınıf", "Modül"], correct: 1, explanation: "Decorator'lar fonksiyonları sarmalayıp özellik ekler." },
-                { text: "Java'da 'generics' ne işe yarar?", options: ["Tip güvenliği", "Döngü", "Dizi", "String"], correct: 0, explanation: "Generics tip güvenliği sağlar." }
-            ],
-            5: [ // Seviye 5 - Uzman
-                { text: "Python'da GIL nedir?", options: ["Global Interpreter Lock", "Graphic Library", "General Input Logic", "Green Island Loop"], correct: 0, explanation: "GIL, CPython'da thread'leri kısıtlayan mekanizmadır." },
-                { text: "Java'da 'JVM' nedir?", options: ["Java Virtual Machine", "Java Variable Memory", "Java Visual Mode", "Java Version Manager"], correct: 0, explanation: "JVM, Java bytecode'unu çalıştıran sanal makinedir." }
-            ]
-        };
+const englishQuestions = {
+    1: [
+        { text: "'Merhaba' İngilizcesi nedir?", options: ["Goodbye", "Hello", "Thanks", "Please"], correct: 1, explanation: "'Hello' = Merhaba" },
+        { text: "'Teşekkür ederim' nasıl denir?", options: ["Please", "Sorry", "Thank you", "Goodbye"], correct: 2, explanation: "'Thank you' = Teşekkür ederim" },
+        { text: "'Nasılsın?' nasıl sorulur?", options: ["What's this?", "How are you?", "Where is it?", "Who are you?"], correct: 1, explanation: "'How are you?' = Nasılsın?" },
+        { text: "'Kedi' İngilizcesi nedir?", options: ["Dog", "Cat", "Bird", "Fish"], correct: 1, explanation: "'Cat' = Kedi" },
+        { text: "'Mavi' hangi renktir?", options: ["Red", "Green", "Blue", "Yellow"], correct: 2, explanation: "'Blue' = Mavi" },
+        { text: "'1' sayısı nasıl yazılır?", options: ["One", "Two", "Three", "Four"], correct: 0, explanation: "'One' = 1" },
+        { text: "'Ev' İngilizcesi nedir?", options: ["Home", "House", "Both", "Hut"], correct: 2, explanation: "'Home' ve 'House' ikisi de ev anlamına gelir." },
+        { text: "'Güle güle' ne demek?", options: ["Hello", "Goodbye", "Hi", "Hey"], correct: 1, explanation: "'Goodbye' = Güle güle" },
+        { text: "'Ben' zamiri nedir?", options: ["You", "He", "I", "She"], correct: 2, explanation: "'I' = Ben" },
+        { text: "'Su' İngilizcesi?", options: ["Water", "Milk", "Juice", "Tea"], correct: 0, explanation: "'Water' = Su" },
+        { text: "'Evet' nasıl denir?", options: ["No", "Yes", "OK", "Maybe"], correct: 1, explanation: "'Yes' = Evet" },
+        { text: "'Hayır' nasıl denir?", options: ["Yes", "No", "Not", "Never"], correct: 1, explanation: "'No' = Hayır" },
+        { text: "'Lütfen' ne demek?", options: ["Sorry", "Thank you", "Please", "Excuse me"], correct: 2, explanation: "'Please' = Lütfen" },
+        { text: "'Anne' İngilizcesi?", options: ["Father", "Mother", "Sister", "Brother"], correct: 1, explanation: "'Mother' = Anne" },
+        { text: "'Baba' İngilizcesi?", options: ["Mother", "Sister", "Brother", "Father"], correct: 3, explanation: "'Father' = Baba" }
+    ],
+    2: [
+        { text: "'Hava durumu nasıl?' sorusu?", options: ["What's the weather?", "How old are you?", "Where are you from?", "What time is it?"], correct: 0, explanation: "'What's the weather?' = Hava nasıl?" },
+        { text: "'Ben 20 yaşındayım' nasıl denir?", options: ["I have 20 years", "I am 20 years old", "I do 20 years", "I make 20 years"], correct: 1, explanation: "'I am 20 years old' doğru kullanımdır." },
+        { text: "'Kitap' çoğulu nedir?", options: ["Book", "Books", "Bookes", "Booken"], correct: 1, explanation: "Çoğul yapmak için -s eklenir: Books" },
+        { text: "'O (erkek) bir doktor' nasıl denir?", options: ["She is a doctor", "He is a doctor", "It is a doctor", "They are doctor"], correct: 1, explanation: "Erkek için 'He' kullanılır." },
+        { text: "'Şimdi saat kaç?' sorusu?", options: ["What time is it?", "How time is it?", "When is clock?", "What's the clock?"], correct: 0, explanation: "'What time is it?' = Saat kaç?" }
+    ],
+    3: [
+        { text: "'Geçmiş olsun' nasıl denir?", options: ["Get well soon", "Good luck", "Congratulations", "Well done"], correct: 0, explanation: "'Get well soon' = Geçmiş olsun" },
+        { text: "'Şerefe!' nasıl denir?", options: ["Cheers", "God bless", "Good health", "Salute"], correct: 0, explanation: "Toast yaparken 'Cheers!' denir." },
+        { text: "'Özür dilerim' nasıl denir?", options: ["Thank you", "Please", "Sorry", "Excuse me"], correct: 2, explanation: "'Sorry' = Özür dilerim" }
+    ],
+    4: [
+        { text: "'I wish I had known' ne demek?", options: ["Keşke bilseydim", "Keşke bilmeseydim", "Keşke bileceğim", "Keşke biliyorum"], correct: 0, explanation: "Geçmişte bilmediğine pişmanlık ifade eder." },
+        { text: "'By the way' ne demek?", options: ["Bu arada", "Yan yoldan", "Bu şekilde", "Yol ile"], correct: 0, explanation: "Konuşmada ek bilgi verirken kullanılır." }
+    ],
+    5: [
+        { text: "'To be or not to be' hangi eserden?", options: ["Romeo Juliet", "Hamlet", "Macbeth", "Othello"], correct: 1, explanation: "Shakespeare'in Hamlet oyunundan ünlü replik." },
+        { text: "'Cogito ergo sum' ne demek?", options: ["Düşünüyorum o halde varım", "Görüyorum o halde varım", "Seviyorum o halde varım", "Yaşıyorum o halde varım"], correct: 0, explanation: "Descartes'in ünlü sözü." }
+    ]
+};
 
-        // İNGİLİZCE SORULARI
-        const englishQuestions = {
-            1: [ // Seviye 1 - Başlangıç
-                { text: "'Merhaba' İngilizcesi nedir?", options: ["Goodbye", "Hello", "Thanks", "Please"], correct: 1, explanation: "'Hello' = Merhaba" },
-                { text: "'Teşekkür ederim' nasıl denir?", options: ["Please", "Sorry", "Thank you", "Goodbye"], correct: 2, explanation: "'Thank you' = Teşekkür ederim" },
-                { text: "'Nasılsın?' nasıl sorulur?", options: ["What's this?", "How are you?", "Where is it?", "Who are you?"], correct: 1, explanation: "'How are you?' = Nasılsın?" },
-                { text: "'Kedi' İngilizcesi nedir?", options: ["Dog", "Cat", "Bird", "Fish"], correct: 1, explanation: "'Cat' = Kedi" },
-                { text: "'Mavi' hangi renktir?", options: ["Red", "Green", "Blue", "Yellow"], correct: 2, explanation: "'Blue' = Mavi" },
-                { text: "'1' sayısı nasıl yazılır?", options: ["One", "Two", "Three", "Four"], correct: 0, explanation: "'One' = 1" },
-                { text: "'Ev' İngilizcesi nedir?", options: ["Home", "House", "Both", "Hut"], correct: 2, explanation: "'Home' ve 'House' ikisi de ev anlamına gelir." },
-                { text: "'Güle güle' ne demek?", options: ["Hello", "Goodbye", "Hi", "Hey"], correct: 1, explanation: "'Goodbye' = Güle güle" },
-                { text: "'Ben' zamiri nedir?", options: ["You", "He", "I", "She"], correct: 2, explanation: "'I' = Ben" },
-                { text: "'Su' İngilizcesi?", options: ["Water", "Milk", "Juice", "Tea"], correct: 0, explanation: "'Water' = Su" },
-                { text: "'Evet' nasıl denir?", options: ["No", "Yes", "OK", "Maybe"], correct: 1, explanation: "'Yes' = Evet" },
-                { text: "'Hayır' nasıl denir?", options: ["Yes", "No", "Not", "Never"], correct: 1, explanation: "'No' = Hayır" },
-                { text: "'Lütfen' ne demek?", options: ["Sorry", "Thank you", "Please", "Excuse me"], correct: 2, explanation: "'Please' = Lütfen" },
-                { text: "'Anne' İngilizcesi?", options: ["Father", "Mother", "Sister", "Brother"], correct: 1, explanation: "'Mother' = Anne" },
-                { text: "'Baba' İngilizcesi?", options: ["Mother", "Sister", "Brother", "Father"], correct: 3, explanation: "'Father' = Baba" }
-            ],
-            2: [ // Seviye 2 - Kolay
-                { text: "'Hava durumu nasıl?' sorusu?", options: ["What's the weather?", "How old are you?", "Where are you from?", "What time is it?"], correct: 0, explanation: "'What's the weather?' = Hava nasıl?" },
-                { text: "'Ben 20 yaşındayım' nasıl denir?", options: ["I have 20 years", "I am 20 years old", "I do 20 years", "I make 20 years"], correct: 1, explanation: "'I am 20 years old' doğru kullanımdır." },
-                { text: "'Kitap' çoğulu nedir?", options: ["Book", "Books", "Bookes", "Booken"], correct: 1, explanation: "Çoğul yapmak için -s eklenir: Books" },
-                { text: "'O (erkek) bir doktor' nasıl denir?", options: ["She is a doctor", "He is a doctor", "It is a doctor", "They are doctor"], correct: 1, explanation: "Erkek için 'He' kullanılır." },
-                { text: "'Şimdi saat kaç?' sorusu?", options: ["What time is it?", "How time is it?", "When is clock?", "What's the clock?"], correct: 0, explanation: "'What time is it?' = Saat kaç?" }
-            ],
-            3: [ // Seviye 3 - Orta
-                { text: "'Geçmiş olsun' nasıl denir?", options: ["Get well soon", "Good luck", "Congratulations", "Well done"], correct: 0, explanation: "'Get well soon' = Geçmiş olsun" },
-                { text: "'Şerefe!' nasıl denir?", options: ["Cheers", "God bless", "Good health", "Salute"], correct: 0, explanation: "Toast yaparken 'Cheers!' denir." },
-                { text: "'Özür dilerim' nasıl denir?", options: ["Thank you", "Please", "Sorry", "Excuse me"], correct: 2, explanation: "'Sorry' = Özür dilerim" }
-            ],
-            4: [ // Seviye 4 - İleri
-                { text: "'I wish I had known' ne demek?", options: ["Keşke bilseydim", "Keşke bilmeseydim", "Keşke bileceğim", "Keşke biliyorum"], correct: 0, explanation: "Geçmişte bilmediğine pişmanlık ifade eder." },
-                { text: "'By the way' ne demek?", options: ["Bu arada", "Yan yoldan", "Bu şekilde", "Yol ile"], correct: 0, explanation: "Konuşmanda ek bilgi verirken kullanılır." }
-            ],
-            5: [ // Seviye 5 - Uzman
-                { text: "'To be or not to be' hangi eserden?", options: ["Romeo Juliet", "Hamlet", "Macbeth", "Othello"], correct: 1, explanation: "Shakespeare'in Hamlet oyunundan ünlü replik." },
-                { text: "'Cogito ergo sum' ne demek?", options: ["Düşünüyorum o halde varım", "Görüyorum o halde varım", "Seviyorum o halde varım", "Yaşıyorum o halde varım"], correct: 0, explanation: "Descartes'in ünlü sözü." }
-            ]
-        };
+const germanQuestions = {
+    1: [
+        { text: "'Merhaba' Almancası nedir?", options: ["Auf Wiedersehen", "Hallo", "Danke", "Bitte"], correct: 1, explanation: "'Hallo' = Merhaba" },
+        { text: "'Teşekkür ederim' Almancası?", options: ["Bitte", "Danke", "Tschüss", "Guten Tag"], correct: 1, explanation: "'Danke' = Teşekkür ederim" },
+        { text: "'Güle güle' Almancası?", options: ["Hallo", "Danke", "Tschüss", "Guten Morgen"], correct: 2, explanation: "'Tschüss' = Güle güle" },
+        { text: "'Evet' Almancası?", options: ["Nein", "Ja", "OK", "Vielleicht"], correct: 1, explanation: "'Ja' = Evet" },
+        { text: "'Hayır' Almancası?", options: ["Ja", "Nein", "Nicht", "Nie"], correct: 1, explanation: "'Nein' = Hayır" },
+        { text: "'1' sayısı Almanca?", options: ["Eins", "Zwei", "Drei", "Vier"], correct: 0, explanation: "'Eins' = 1" },
+        { text: "'2' sayısı Almanca?", options: ["Eins", "Zwei", "Drei", "Vier"], correct: 1, explanation: "'Zwei' = 2" },
+        { text: "'3' sayısı Almanca?", options: ["Eins", "Zwei", "Drei", "Vier"], correct: 2, explanation: "'Drei' = 3" },
+        { text: "'Günaydın' Almancası?", options: ["Guten Abend", "Gute Nacht", "Guten Morgen", "Guten Tag"], correct: 2, explanation: "'Guten Morgen' = Günaydın" },
+        { text: "'İyi günler' Almancası?", options: ["Guten Morgen", "Guten Tag", "Guten Abend", "Gute Nacht"], correct: 1, explanation: "'Guten Tag' = İyi günler" },
+        { text: "'Ben' Almancası?", options: ["Du", "Er", "Ich", "Sie"], correct: 2, explanation: "'Ich' = Ben" },
+        { text: "'Sen' Almancası?", options: ["Ich", "Du", "Er", "Wir"], correct: 1, explanation: "'Du' = Sen" },
+        { text: "'Lütfen' Almancası?", options: ["Danke", "Bitte", "Sorry", "Tschüss"], correct: 1, explanation: "'Bitte' = Lütfen" },
+        { text: "'Su' Almancası?", options: ["Wasser", "Bier", "Wein", "Milch"], correct: 0, explanation: "'Wasser' = Su" },
+        { text: "'Ekmek' Almancası?", options: ["Brot", "Käse", "Wurst", "Butter"], correct: 0, explanation: "'Brot' = Ekmek" }
+    ],
+    2: [
+        { text: "'Adın ne?' Almancası?", options: ["Wie alt bist du?", "Wie heißt du?", "Wo wohnst du?", "Was machst du?"], correct: 1, explanation: "'Wie heißt du?' = Adın ne?" },
+        { text: "'Ben Ali' Almancası?", options: ["Ich bin Ali", "Ich heiße Ali", "Beide", "Keines"], correct: 2, explanation: "İkisi de doğru." },
+        { text: "'Kaç yaşındasın?' Almancası?", options: ["Wie heißt du?", "Wie alt bist du?", "Woher kommst du?", "Was ist das?"], correct: 1, explanation: "'Wie alt bist du?' = Kaç yaşındasın?" },
+        { text: "'Türkiye'den geliyorum' Almancası?", options: ["Ich komme aus Deutschland", "Ich komme aus der Türkei", "Ich bin in Türkei", "Ich wohne in Türkei"], correct: 1, explanation: "'aus der Türkei' = Türkiye'den" },
+        { text: "'Güzel' Almancası?", options: ["Schlecht", "Schön", "Groß", "Klein"], correct: 1, explanation: "'Schön' = Güzel" }
+    ],
+    3: [
+        { text: "'Dönüş yapacağım' Almancası?", options: ["Ich gehe", "Ich komme zurück", "Ich laufe", "Ich springe"], correct: 1, explanation: "'zurückkommen' = geri dönmek" },
+        { text: "'Anlamadım' Almancası?", options: ["Ich verstehe nicht", "Ich weiß nicht", "Ich kann nicht", "Ich mache nicht"], correct: 0, explanation: "'Ich verstehe nicht' = Anlamadım" },
+        { text: "'Yardım eder misin?' Almancası?", options: ["Kannst du helfen?", "Hilfst du mir?", "Kannst du mir helfen?", "Hilfe!"], correct: 2, explanation: "'Kannst du mir helfen?' = Yardım eder misin?" }
+    ],
+    4: [
+        { text: "'Schadenfreude' ne demek?", options: ["Başkasının üzüntüsüne sevinme", "Üzüntü", "Mutluluk", "Korku"], correct: 0, explanation: "Başkasının kötü durumuna sevinmek." },
+        { text: "'Fernweh' ne demek?", options: ["Ev hasreti", "Uzaklara gitme isteği", "Deniz özlemi", "Dağ hasreti"], correct: 1, explanation: "'Fern' (uzak) + 'Weh' (ağrı) = Uzaklara gitme isteği" }
+    ],
+    5: [
+        { text: "'Vergangenheitsbewältigung' ne anlama gelir?", options: ["Gelecek planı", "Geçmişle hesaplaşma", "Şimdiki zaman", "Gelecek korkusu"], correct: 1, explanation: "Almanya'nın Nazi geçmişiyle yüzleşmesi." },
+        { text: "'Weltschmerz' ne demek?", options: ["Dünya sevgisi", "Dünya acısı", "Dünya barışı", "Dünya neşesi"], correct: 1, explanation: "Dünyanın kötülüğü karşısında melankoli." }
+    ]
+};
 
-        // ALMANCA SORULARI
-        const germanQuestions = {
-            1: [ // Seviye 1 - Başlangıç
-                { text: "'Merhaba' Almancası nedir?", options: ["Auf Wiedersehen", "Hallo", "Danke", "Bitte"], correct: 1, explanation: "'Hallo' = Merhaba" },
-                { text: "'Teşekkür ederim' Almancası?", options: ["Bitte", "Danke", "Tschüss", "Guten Tag"], correct: 1, explanation: "'Danke' = Teşekkür ederim" },
-                { text: "'Güle güle' Almancası?", options: ["Hallo", "Danke", "Tschüss", "Guten Morgen"], correct: 2, explanation: "'Tschüss' = Güle güle" },
-                { text: "'Evet' Almancası?", options: ["Nein", "Ja", "OK", "Vielleicht"], correct: 1, explanation: "'Ja' = Evet" },
-                { text: "'Hayır' Almancası?", options: ["Ja", "Nein", "Nicht", "Nie"], correct: 1, explanation: "'Nein' = Hayır" },
-                { text: "'1' sayısı Almanca?", options: ["Eins", "Zwei", "Drei", "Vier"], correct: 0, explanation: "'Eins' = 1" },
-                { text: "'2' sayısı Almanca?", options: ["Eins", "Zwei", "Drei", "Vier"], correct: 1, explanation: "'Zwei' = 2" },
-                { text: "'3' sayısı Almanca?", options: ["Eins", "Zwei", "Drei", "Vier"], correct: 2, explanation: "'Drei' = 3" },
-                { text: "'Günaydın' Almancası?", options: ["Guten Abend", "Gute Nacht", "Guten Morgen", "Guten Tag"], correct: 2, explanation: "'Guten Morgen' = Günaydın" },
-                { text: "'İyi günler' Almancası?", options: ["Guten Morgen", "Guten Tag", "Guten Abend", "Gute Nacht"], correct: 1, explanation: "'Guten Tag' = İyi günler" },
-                { text: "'Ben' Almancası?", options: ["Du", "Er", "Ich", "Sie"], correct: 2, explanation: "'Ich' = Ben" },
-                { text: "'Sen' Almancası?", options: ["Ich", "Du", "Er", "Wir"], correct: 1, explanation: "'Du' = Sen" },
-                { text: "'Lütfen' Almancası?", options: ["Danke", "Bitte", "Sorry", "Tschüss"], correct: 1, explanation: "'Bitte' = Lütfen" },
-                { text: "'Su' Almancası?", options: ["Wasser", "Bier", "Wein", "Milch"], correct: 0, explanation: "'Wasser' = Su" },
-                { text: "'Ekmek' Almancası?", options: ["Brot", "Käse", "Wurst", "Butter"], correct: 0, explanation: "'Brot' = Ekmek" }
-            ],
-            2: [ // Seviye 2 - Kolay
-                { text: "'Adın ne?' Almancası?", options: ["Wie alt bist du?", "Wie heißt du?", "Wo wohnst du?", "Was machst du?"], correct: 1, explanation: "'Wie heißt du?' = Adın ne?" },
-                { text: "'Ben Ali' Almancası?", options: ["Ich bin Ali", "Ich heiße Ali", "Beide", "Keines"], correct: 2, explanation: "İkisi de doğru." },
-                { text: "'Kaç yaşındasın?' Almancası?", options: ["Wie heißt du?", "Wie alt bist du?", "Woher kommst du?", "Was ist das?"], correct: 1, explanation: "'Wie alt bist du?' = Kaç yaşındasın?" },
-                { text: "'Türkiye'den geliyorum' Almancası?", options: ["Ich komme aus Deutschland", "Ich komme aus der Türkei", "Ich bin in Türkei", "Ich wohne in Türkei"], correct: 1, explanation: "'aus der Türkei' = Türkiye'den" },
-                { text: "'Güzel' Almancası?", options: ["Schlecht", "Schön", "Groß", "Klein"], correct: 1, explanation: "'Schön' = Güzel" }
-            ],
-            3: [ // Seviye 3 - Orta
-                { text: "'Dönüş yapacağım' Almancası?", options: ["Ich gehe", "Ich komme zurück", "Ich laufe", "Ich springe"], correct: 1, explanation: "'zurückkommen' = geri dönmek" },
-                { text: "'Anlamadım' Almancası?", options: ["Ich verstehe nicht", "Ich weiß nicht", "Ich kann nicht", "Ich mache nicht"], correct: 0, explanation: "'Ich verstehe nicht' = Anlamadım" },
-                { text: "'Yardım eder misin?' Almancası?", options: ["Kannst du helfen?", "Hilfst du mir?", "Kannst du mir helfen?", "Hilfe!"], correct: 2, explanation: "'Kannst du mir helfen?' = Yardım eder misin?" }
-            ],
-            4: [ // Seviye 4 - İleri
-                { text: "'Schadenfreude' ne demek?", options: ["Başkasının üzüntüsüne sevinme", "Üzüntü", "Mutluluk", "Korku"], correct: 0, explanation: "Başkasının kötü durumuna sevinmek." },
-                { text: "'Fernweh' ne demek?", options: ["Ev hasreti", "Uzaklara gitme isteği", "Deniz özlemi", "Dağ hasreti"], correct: 1, explanation: "'Fern' (uzak) + 'Weh' (ağrı) = Uzaklara gitme isteği" }
-            ],
-            5: [ // Seviye 5 - Uzman
-                { text: "'Vergangenheitsbewältigung' ne anlama gelir?", options: ["Gelecek planı", "Geçmişle hesaplaşma", "Şimdiki zaman", "Gelecek korkusu"], correct: 1, explanation: "Almanya'nın Nazi geçmişiyle yüzleşmesi." },
-                { text: "'Weltschmerz' ne demek?", options: ["Dünya sevgisi", "Dünya acısı", "Dünya barışı", "Dünya neşesi"], correct: 1, explanation: "Dünyanın kötülüğü karşısında melankoli." }
-            ]
-        };
+const QUESTIONS = { coding: codingQuestions, english: englishQuestions, german: germanQuestions };
 
-        // Seviye eksiklerini tamamla (her seviyede en az 15 soru)
-        for (let level = 1; level <= 5; level++) {
-            while (codingQuestions[level].length < 15) {
-                codingQuestions[level].push(...codingQuestions[level].slice(0, 5));
-            }
-            codingQuestions[level] = codingQuestions[level].slice(0, 15);
-            
-            while (englishQuestions[level].length < 15) {
-                englishQuestions[level].push(...englishQuestions[level].slice(0, 5));
-            }
-            englishQuestions[level] = englishQuestions[level].slice(0, 15);
-            
-            while (germanQuestions[level].length < 15) {
-                germanQuestions[level].push(...germanQuestions[level].slice(0, 5));
-            }
-            germanQuestions[level] = germanQuestions[level].slice(0, 15);
-        }
+const CATEGORIES = {
+  coding:  { label: 'Kodlama',   emoji: '💻', color: '#667eea', grad: 'linear-gradient(135deg,#667eea,#764ba2)' },
+  english: { label: 'İngilizce', emoji: '🇬🇧', color: '#f093fb', grad: 'linear-gradient(135deg,#f093fb,#f5576c)' },
+  german:  { label: 'Almanca',   emoji: '🇩🇪', color: '#4facfe', grad: 'linear-gradient(135deg,#4facfe,#00f2fe)' }
+};
 
-        // ==================== PAYWALL ====================
-        let isPremium = JSON.parse(localStorage.getItem('eduKella_premium') || 'false');
-        let selectedPlan = 'yearly';
+const LEVELS = {
+  1: { name: 'Başlangıç', icon: '🌱', xpReward: 50 },
+  2: { name: 'Kolay',     icon: '⚡', xpReward: 100 },
+  3: { name: 'Orta',      icon: '🔥', xpReward: 150 },
+  4: { name: 'İleri',     icon: '💎', xpReward: 200 },
+  5: { name: 'Uzman',     icon: '🏆', xpReward: 300 }
+};
 
-        function showPaywall(onSuccess) {
-            const overlay = document.createElement('div');
-            overlay.className = 'paywall-overlay';
-            overlay.id = 'paywallOverlay';
-            overlay.innerHTML = `
-                <div class="paywall-card">
-                    <div class="paywall-crown">👑</div>
-                    <div class="paywall-title">EduCate Premium</div>
-                    <div class="paywall-sub">Tüm seviyelerin kilidini aç, sınırsız öğren!</div>
-                    <ul class="paywall-features">
-                        <li>Seviye 2, 3, 4 ve 5'e tam erişim</li>
-                        <li>3 kategoride 200+ soru</li>
-                        <li>Detaylı açıklamalar ve ipuçları</li>
-                        <li>İlerleme kaydı ve rozetler</li>
-                        <li>Reklamsız deneyim</li>
-                    </ul>
-                    <div class="plans">
-                        <div class="plan ${selectedPlan === 'monthly' ? 'selected' : ''}" onclick="selectPlan('monthly')">
-                            <div class="plan-period">Aylık</div>
-                            <div class="plan-price">₺49<span>/ay</span></div>
-                            <div class="plan-saving">&nbsp;</div>
-                        </div>
-                        <div class="plan ${selectedPlan === 'yearly' ? 'selected' : ''}" onclick="selectPlan('yearly')">
-                            <div class="plan-badge">🔥 En Popüler</div>
-                            <div class="plan-period">Yıllık</div>
-                            <div class="plan-price">₺299<span>/yıl</span></div>
-                            <div class="plan-saving">%49 tasarruf et</div>
-                        </div>
-                    </div>
-                    <button class="btn-buy" onclick="handlePurchase()">
-                        🚀 Hemen Başla
-                    </button>
-                    <br>
-                    <button class="paywall-dismiss" onclick="closePaywall()">Şimdi değil</button>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-            window._paywallCallback = onSuccess;
-        }
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  screen: 'splash',
+  category: null,
+  level: null,
+  questions: [],
+  qIndex: 0,
+  selected: null,
+  answered: false,
+  correct: 0,
+  wrong: 0,
+  combo: 0,
+  xpGained: 0,
+  showPaywall: false,
+  paywallPlan: 'yearly',
+};
 
-        window.selectPlan = (plan) => {
-            selectedPlan = plan;
-            document.querySelectorAll('.plan').forEach(el => el.classList.remove('selected'));
-            document.querySelectorAll('.plan')[plan === 'monthly' ? 0 : 1].classList.add('selected');
-        };
+// ============================================================
+// PERSISTENCE
+// ============================================================
+function loadPersist() {
+  return {
+    xp:       parseInt(localStorage.getItem('edukella_xp')      || '0'),
+    streak:   parseInt(localStorage.getItem('edukella_streak')  || '1'),
+    hearts:   parseInt(localStorage.getItem('edukella_hearts')  || '5'),
+    unlocked: JSON.parse(localStorage.getItem('edukella_unlocked') || '{"coding":[1],"english":[1],"german":[1]}'),
+    premium:  localStorage.getItem('edukella_premium') === 'true',
+    stars:    JSON.parse(localStorage.getItem('edukella_stars') || '{}'),
+  };
+}
 
-        window.closePaywall = () => {
-            const overlay = document.getElementById('paywallOverlay');
-            if (overlay) overlay.remove();
-        };
+function savePersist(p) {
+  localStorage.setItem('edukella_xp',       p.xp);
+  localStorage.setItem('edukella_streak',   p.streak);
+  localStorage.setItem('edukella_hearts',   p.hearts);
+  localStorage.setItem('edukella_unlocked', JSON.stringify(p.unlocked));
+  localStorage.setItem('edukella_premium',  p.premium);
+  localStorage.setItem('edukella_stars',    JSON.stringify(p.stars));
+}
 
-        window.handlePurchase = () => {
-            closePaywall();
-            // Simulate payment success (replace with real payment gateway)
-            isPremium = true;
-            localStorage.setItem('eduKella_premium', 'true');
-            showSuccessModal();
-        };
+let persist = loadPersist();
 
-        function showSuccessModal() {
-            const el = document.createElement('div');
-            el.className = 'success-overlay';
-            el.innerHTML = `
-                <div class="success-card">
-                    <div style="font-size:72px">🎉</div>
-                    <h2 style="color:#667eea;margin:16px 0 8px">Premium Aktif!</h2>
-                    <p style="color:#666;margin-bottom:28px">Artık tüm seviyelere erişebilirsin. İyi öğrenmeler!</p>
-                    <button class="btn-buy" onclick="this.closest('.success-overlay').remove(); render();">Harika, başlayalım!</button>
-                </div>
-            `;
-            document.body.appendChild(el);
-        }
+// ============================================================
+// UTILS
+// ============================================================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
-        // ==================== UYGULAMA DURUMU ====================
-        let currentCategory = 'coding';
-        let currentLevel = null;
-        let unlockedLevels = JSON.parse(localStorage.getItem('unlockedLevels_educate') || '{"coding": [1], "english": [1], "german": [1]}');
-        let currentQuestions = [];
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let userPoints = JSON.parse(localStorage.getItem('userPoints_educate') || '{"coding": 0, "english": 0, "german": 0}');
-        
-        // Kullanılmış soruları takip et (ard arda aynı soru gelmesin diye)
-        let usedQuestionsHistory = { coding: {}, english: {}, german: {} };
+function getQuestions(cat, level) {
+  const pool = QUESTIONS[cat][level] || [];
+  let s = shuffle(pool);
+  while (s.length < 5) s = [...s, ...shuffle(pool)];
+  return s.slice(0, 5);
+}
 
-        function getRandomQuestions(category, level, count = 5) {
-            let pool;
-            if (category === 'coding') pool = codingQuestions[level];
-            else if (category === 'english') pool = englishQuestions[level];
-            else pool = germanQuestions[level];
-            
-            // Daha önce kullanılan soruların ID'lerini al
-            const historyKey = `${category}_${level}`;
-            if (!usedQuestionsHistory[category]) usedQuestionsHistory[category] = {};
-            if (!usedQuestionsHistory[category][level]) usedQuestionsHistory[category][level] = [];
-            
-            const usedIds = usedQuestionsHistory[category][level];
-            
-            // Kullanılmayan soruları filtrele
-            let available = pool.filter((_, idx) => !usedIds.includes(idx));
-            
-            // Eğer kullanılmayan soru kalmadıysa, history'yi sıfırla
-            if (available.length < count) {
-                usedQuestionsHistory[category][level] = [];
-                available = [...pool];
-            }
-            
-            // Rastgele seç
-            const shuffled = [...available];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            
-            const selected = shuffled.slice(0, count);
-            
-            // Seçilen soruları history'e ekle
-            selected.forEach(q => {
-                const idx = pool.findIndex(p => p.text === q.text);
-                if (!usedQuestionsHistory[category][level].includes(idx)) {
-                    usedQuestionsHistory[category][level].push(idx);
-                }
-            });
-            
-            return selected;
-        }
+function calcStars(correct) {
+  return correct >= 5 ? 3 : correct >= 3 ? 2 : 1;
+}
 
-        function unlockLevel(category, level) {
-            if (!unlockedLevels[category].includes(level)) {
-                unlockedLevels[category].push(level);
-                localStorage.setItem('unlockedLevels_educate', JSON.stringify(unlockedLevels));
-            }
-        }
+// ============================================================
+// PARTICLES
+// ============================================================
+function initParticles() {
+  const container = document.getElementById('particles');
+  const colors = ['#667eea','#764ba2','#f093fb','#4facfe','#00f2fe','#f5576c','#ffd700'];
+  for (let i = 0; i < 14; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 60 + 20;
+    p.style.cssText = [
+      `width:${size}px`,
+      `height:${size}px`,
+      `left:${Math.random()*100}%`,
+      `background:${colors[Math.floor(Math.random()*colors.length)]}`,
+      `animation-duration:${Math.random()*20+15}s`,
+      `animation-delay:-${Math.random()*20}s`,
+      `filter:blur(${Math.random()*10+5}px)`
+    ].join(';');
+    container.appendChild(p);
+  }
+}
 
-        function checkAndUnlockNextLevel() {
-            const nextLevel = currentLevel + 1;
-            if (nextLevel <= 5 && score >= 40) {
-                if (!unlockedLevels[currentCategory].includes(nextLevel)) {
-                    unlockLevel(currentCategory, nextLevel);
-                    alert(`🎉 Tebrikler! ${getCategoryName()} Seviye ${nextLevel} açıldı! 🎉`);
-                }
-            }
-        }
+// ============================================================
+// RENDER
+// ============================================================
+function render() {
+  const app = document.getElementById('app');
 
-        function savePoints() {
-            userPoints[currentCategory] += score;
-            localStorage.setItem('userPoints_educate', JSON.stringify(userPoints));
-        }
+  switch (state.screen) {
+    case 'splash':   app.innerHTML = renderSplash();   break;
+    case 'home':     app.innerHTML = renderHome();     break;
+    case 'map':      app.innerHTML = renderMap();      break;
+    case 'quiz':     app.innerHTML = renderQuiz();     break;
+    case 'result':   app.innerHTML = renderResult();   break;
+    case 'nohearts': app.innerHTML = renderNoHearts(); break;
+  }
 
-        function getCategoryName() {
-            const names = { coding: '💻 Kodlama', english: '🇬🇧 İngilizce', german: '🇩🇪 Almanca' };
-            return names[currentCategory];
-        }
+  // Paywall overlay
+  const existing = document.getElementById('paywall-overlay');
+  if (state.showPaywall) {
+    if (!existing) {
+      document.getElementById('app-wrapper').insertAdjacentHTML('beforeend', renderPaywall());
+    }
+  } else {
+    if (existing) existing.remove();
+  }
 
-        function render() {
-            if (currentLevel === null) {
-                renderCategorySelect();
-            } else if (currentQuestionIndex < currentQuestions.length) {
-                renderQuestion();
-            } else {
-                renderResult();
-            }
-        }
+  attachEvents();
+}
 
-        function renderCategorySelect() {
-            const levelNames = ['🥉 Başlangıç', '📘 Kolay', '📙 Orta', '📗 İleri', '🏆 Uzman'];
-            const levelDescs = ['Temel kavramlar', 'Pratik bilgiler', 'Problem çözme', 'Derin konular', 'Uzmanlık'];
-            
-            app.innerHTML = `
-                <div class="container">
-                    <div class="header">
-                        <div class="logo-container">
-                            ${logoHtml}
-                            <span class="logo-text">EduCate</span>
-                        </div>
-                        <div class="stats">
-                            ${isPremium
-                                ? `<div class="stat" style="background:#fff8e1;color:#f59e0b;font-weight:bold;">👑 Premium</div>`
-                                : `<div class="stat" style="cursor:pointer;" onclick="showPaywall()">🔓 Ücretsiz</div>`}
-                            <div class="stat points">⭐ Toplam: ${userPoints.coding + userPoints.english + userPoints.german} puan</div>
-                            <div class="stat points">💻 ${userPoints.coding}</div>
-                            <div class="stat points">🇬🇧 ${userPoints.english}</div>
-                            <div class="stat points">🇩🇪 ${userPoints.german}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="category-selector">
-                        <button class="cat-btn coding ${currentCategory === 'coding' ? 'active' : ''}" onclick="selectCategory('coding')">
-                            💻 Kodlama
-                        </button>
-                        <button class="cat-btn english ${currentCategory === 'english' ? 'active' : ''}" onclick="selectCategory('english')">
-                            🇬🇧 İngilizce
-                        </button>
-                        <button class="cat-btn german ${currentCategory === 'german' ? 'active' : ''}" onclick="selectCategory('german')">
-                            🇩🇪 Almanca
-                        </button>
-                    </div>
-                    
-                    <h2 style="color: white; text-align: center; margin-bottom: 20px;">📖 Seviye Seç - ${getCategoryName()}</h2>
-                    <div class="levels-grid">
-                        ${[1,2,3,4,5].map(level => {
-                            const isUnlocked = unlockedLevels[currentCategory].includes(level);
-                            const needsPremium = level > 1 && !isPremium;
-                            const clickable = isUnlocked && !needsPremium;
-                            return `
-                            <div class="level-card ${!isUnlocked || needsPremium ? 'locked' : ''}"
-                                 onclick="${needsPremium ? `showPaywall()` : clickable ? `startLevel(${level})` : ''}">
-                                <div class="level-number">${level}</div>
-                                <div class="level-name">${levelNames[level-1]}${needsPremium ? '<span class="premium-badge">PRO</span>' : ''}</div>
-                                <div class="level-desc">${levelDescs[level-1]}</div>
-                                <div class="lock-icon">${needsPremium ? '👑' : !isUnlocked ? '🔒' : '🔓'}</div>
-                            </div>`;
-                        }).join('')}
-                    </div>
-                </div>
-            `;
-        }
+// ============================================================
+// SCREENS
+// ============================================================
+function renderSplash() {
+  return `<div class="splash">
+    <div class="splash-logo">🎓</div>
+    <div class="splash-title">EduKella</div>
+    <div class="splash-sub">Öğrenmenin en eğlenceli yolu</div>
+    <div class="splash-loader"><div class="splash-loader-bar"></div></div>
+  </div>`;
+}
 
-        function renderQuestion() {
-            const q = currentQuestions[currentQuestionIndex];
-            app.innerHTML = `
-                <div class="container">
-                    <div class="question-container">
-                        <div class="question-header">
-                            <span>${getCategoryName()} • Seviye ${currentLevel}</span>
-                            <span>Soru ${currentQuestionIndex + 1}/${currentQuestions.length}</span>
-                            <span>⭐ ${score} puan</span>
-                        </div>
-                        <div class="question-text">${q.text}</div>
-                        <div class="options">
-                            ${q.options.map((opt, idx) => `
-                                <div class="option" onclick="checkAnswer(${idx})">
-                                    ${String.fromCharCode(65+idx)}. ${opt}
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div id="feedback"></div>
-                    </div>
-                </div>
-            `;
-        }
+function renderHome() {
+  const xpLevel = Math.floor(persist.xp / 500) + 1;
+  const xpPct = Math.min((persist.xp % 500) / 500 * 100, 100);
 
-        function renderResult() {
-            const percentage = (score / (currentQuestions.length * 10)) * 100;
-            const stars = percentage >= 90 ? '⭐⭐⭐⭐⭐' : percentage >= 70 ? '⭐⭐⭐⭐' : percentage >= 50 ? '⭐⭐⭐' : percentage >= 30 ? '⭐⭐' : '⭐';
-            const message = percentage >= 70 ? '🎉 Harika! Bir sonraki seviyeye geçebilirsin!' : '📚 Tekrar dene, daha iyi yapabilirsin!';
-            
-            app.innerHTML = `
-                <div class="container">
-                    <div class="result-card">
-                        ${logoHtml}
-                        <h2>🎓 ${getCategoryName()} Seviye ${currentLevel} Tamamlandı!</h2>
-                        <div class="result-score">${score}/${currentQuestions.length * 10}</div>
-                        <div class="stars">${stars}</div>
-                        <p>${message}</p>
-                        <button onclick="finishLevel()">🏠 Ana Menüye Dön</button>
-                        ${percentage >= 70 && currentLevel < 5 ? `<button onclick="nextLevel()" style="background: #4CAF50;">🚀 Sonraki Seviye →</button>` : ''}
-                    </div>
-                </div>
-            `;
-        }
+  let catCards = '';
+  Object.entries(CATEGORIES).forEach(([key, cat], idx) => {
+    const catStars = persist.stars[key] || {};
+    const completed = Object.values(catStars).filter(s => s > 0).length;
+    const prog = Math.round(completed / 5 * 100);
+    catCards += `<div class="category-card" data-cat="${key}" style="background:${cat.grad};animation-delay:${0.08*(idx+1)}s">
+      <span class="cat-emoji">${cat.emoji}</span>
+      <div class="cat-name">${cat.label}</div>
+      <div class="cat-sub">5 Seviye &bull; ${completed}/5 Tamamlandı</div>
+      <div class="cat-progress"><div class="cat-progress-fill" style="width:${prog}%"></div></div>
+      <div class="cat-progress-label">${prog}% ilerleme</div>
+    </div>`;
+  });
 
-        window.selectCategory = (category) => {
-            currentCategory = category;
-            currentLevel = null;
-            render();
-        };
+  return `<div class="home">
+    <div class="header">
+      <div class="header-logo">EduKella</div>
+      <div class="header-stats">
+        <div class="stat-chip">🔥 ${persist.streak}</div>
+        <div class="stat-chip">❤️ ${persist.hearts}</div>
+        <div class="stat-chip">⭐ ${persist.xp}</div>
+      </div>
+    </div>
+    <div class="xp-bar-wrap">
+      <div class="xp-label">Seviye ${xpLevel} &bull; ${persist.xp % 500}/500 XP</div>
+      <div class="xp-bar-bg"><div class="xp-bar-fill" style="width:${xpPct}%"></div></div>
+    </div>
+    <div class="home-body">
+      <div>
+        <div class="section-label">Günlük Durum</div>
+        <div class="daily-stats">
+          <div class="daily-card">
+            <div class="daily-card-icon">🔥</div>
+            <div class="daily-card-val">${persist.streak}</div>
+            <div class="daily-card-lbl">Gün Serisi</div>
+          </div>
+          <div class="daily-card">
+            <div class="daily-card-icon">❤️</div>
+            <div class="daily-card-val">${persist.hearts}</div>
+            <div class="daily-card-lbl">Can</div>
+          </div>
+          <div class="daily-card">
+            <div class="daily-card-icon">⭐</div>
+            <div class="daily-card-val">${persist.xp}</div>
+            <div class="daily-card-lbl">Toplam XP</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Kategoriler</div>
+        ${catCards}
+      </div>
+    </div>
+  </div>`;
+}
 
-        window.startLevel = (level) => {
-            if (level > 1 && !isPremium) { showPaywall(); return; }
-            currentLevel = level;
-            currentQuestions = getRandomQuestions(currentCategory, level, 5);
-            currentQuestionIndex = 0;
-            score = 0;
-            render();
-        };
+function renderMap() {
+  const cat = CATEGORIES[state.category];
+  const unlocked = persist.unlocked[state.category] || [1];
+  const catStars = persist.stars[state.category] || {};
 
-        window.checkAnswer = (selectedIndex) => {
-            const q = currentQuestions[currentQuestionIndex];
-            const isCorrect = selectedIndex === q.correct;
-            const optionsDivs = document.querySelectorAll('.option');
-            
-            optionsDivs.forEach(div => div.style.pointerEvents = 'none');
-            
-            if (isCorrect) {
-                score += 10;
-                optionsDivs[selectedIndex].classList.add('correct');
-                document.getElementById('feedback').innerHTML = `
-                    <div class="feedback" style="background: #e8f5e9;">
-                        ✅ Doğru! +10 puan<br>
-                        <small>📖 ${q.explanation}</small>
-                    </div>
-                `;
-            } else {
-                optionsDivs[selectedIndex].classList.add('wrong');
-                optionsDivs[q.correct].classList.add('correct');
-                document.getElementById('feedback').innerHTML = `
-                    <div class="feedback" style="background: #ffebee;">
-                        ❌ Yanlış! Doğru cevap: ${q.options[q.correct]}<br>
-                        <small>📖 ${q.explanation}</small>
-                    </div>
-                `;
-            }
-            
-            setTimeout(() => {
-                currentQuestionIndex++;
-                if (currentQuestionIndex < currentQuestions.length) {
-                    renderQuestion();
-                } else {
-                    savePoints();
-                    checkAndUnlockNextLevel();
-                    render();
-                }
-            }, 2000);
-        };
+  let nodes = '';
+  for (let i = 1; i <= 5; i++) {
+    const lv = LEVELS[i];
+    const isUnlocked = unlocked.includes(i);
+    const isCompleted = catStars[i] > 0;
+    const isPremiumLocked = i > 1 && !persist.premium;
+    const isHardLocked = !isUnlocked && !isPremiumLocked;
 
-        window.finishLevel = () => {
-            currentLevel = null;
-            render();
-        };
+    let cls = 'locked';
+    if (isCompleted) cls = 'completed';
+    else if (isUnlocked) cls = 'unlocked';
 
-        window.nextLevel = () => {
-            if (currentLevel + 1 <= 5 && unlockedLevels[currentCategory].includes(currentLevel + 1)) {
-                startLevel(currentLevel + 1);
-            } else {
-                finishLevel();
-            }
-        };
+    const starsHtml = isCompleted
+      ? `<div class="stars-row">${[1,2,3].map(s => `<span class="star-sm">${s <= catStars[i] ? '⭐' : '☆'}</span>`).join('')}</div>`
+      : '';
 
+    let badge = 'Kilitli';
+    if (isCompleted) badge = '✓ Bitti';
+    else if (isUnlocked) badge = 'Oyna';
+
+    let lockIcon = '';
+    if (isPremiumLocked) lockIcon = '<span class="level-node-lock">👑</span>';
+    else if (isHardLocked) lockIcon = '<span class="level-node-lock">🔒</span>';
+
+    nodes += `
+      ${i > 1 ? '<div class="level-connector"></div>' : ''}
+      <div class="level-node ${cls}" data-level="${i}">
+        <div class="level-node-icon">${lv.icon}</div>
+        <div class="level-node-info">
+          <div class="level-node-name">Seviye ${i} — ${lv.name}</div>
+          <div class="level-node-sub">+${lv.xpReward} XP${isPremiumLocked ? ' &bull; Premium' : ''}</div>
+          ${starsHtml}
+        </div>
+        <span class="level-node-badge">${badge}</span>
+        ${lockIcon}
+      </div>`;
+  }
+
+  return `<div class="level-map">
+    <div class="level-map-header">
+      <div class="back-btn" id="back-home">&#8592;</div>
+      <div style="font-size:28px">${cat.emoji}</div>
+      <div class="level-map-title">${cat.label}</div>
+    </div>
+    <div class="level-map-body">
+      <div class="level-node-wrap">${nodes}</div>
+    </div>
+  </div>`;
+}
+
+function renderQuiz() {
+  const q = state.questions[state.qIndex];
+  const progress = (state.qIndex / state.questions.length) * 100;
+  const letters = ['A','B','C','D'];
+
+  // Hearts
+  let heartsHtml = '';
+  for (let i = 0; i < 5; i++) {
+    const lost = i >= persist.hearts;
+    heartsHtml += `<span class="heart${lost ? ' lost' : ''}">${lost ? '🖤' : '❤️'}</span>`;
+  }
+
+  // Options
+  const optionsHtml = q.options.map((opt, i) => {
+    let cls = 'option-btn';
+    if (state.answered) {
+      if (i === q.correct) cls += ' correct';
+      else if (i === state.selected) cls += ' wrong';
+    }
+    return `<button class="${cls}" data-opt="${i}" style="animation-delay:${0.05*i}s" ${state.answered ? 'disabled' : ''}>
+      <span class="option-letter">${letters[i]}</span>
+      <span>${opt}</span>
+    </button>`;
+  }).join('');
+
+  // Explanation
+  let explanationHtml = '';
+  if (state.answered) {
+    const isCorrect = state.selected === q.correct;
+    explanationHtml = `<div class="explanation-card ${isCorrect ? 'correct-exp' : 'wrong-exp'}">
+      ${isCorrect ? '✅' : '❌'} ${q.explanation}
+    </div>`;
+  }
+
+  const isLast = state.qIndex >= state.questions.length - 1;
+  const nextBtn = state.answered
+    ? `<button class="next-btn" id="next-btn">${isLast ? 'Sonuçları Gör 🎉' : 'Sonraki Soru →'}</button>`
+    : '';
+
+  const comboHtml = state.combo >= 3
+    ? `<div style="margin-top:6px"><span class="combo-badge">🔥 ${state.combo}x Combo!</span></div>`
+    : '';
+
+  return `<div class="quiz">
+    <div class="quiz-header">
+      <div class="quiz-top">
+        <div class="back-btn" id="back-map">&#8592;</div>
+        <div class="quiz-progress-bg"><div class="quiz-progress-fill" style="width:${progress}%"></div></div>
+        <div class="quiz-stats">
+          <div class="hearts-display" id="hearts-display">${heartsHtml}</div>
+        </div>
+      </div>
+      ${comboHtml}
+    </div>
+    <div class="quiz-body">
+      <div class="question-num">Soru ${state.qIndex + 1} / ${state.questions.length}</div>
+      <div class="question-card"><div class="question-text">${q.text}</div></div>
+      <div class="options">${optionsHtml}</div>
+      ${explanationHtml}
+      ${nextBtn}
+    </div>
+  </div>`;
+}
+
+function renderResult() {
+  const stars = calcStars(state.correct);
+  const msgs = {
+    3: ['Mükemmel! 🎉', 'Tüm soruları doğru yaptın, harikasın!'],
+    2: ['Çok İyi! 👏', 'Güzel performans, devam et!'],
+    1: ['İyi Deneme! 💪', 'Pratik yaptıkça daha iyi olacaksın!']
+  };
+  const [title, sub] = msgs[stars];
+
+  const starsHtml = [1,2,3].map((s, i) => {
+    const filled = s <= stars;
+    return `<span class="result-star${filled ? '' : ' empty'}" style="animation-delay:${0.1+i*0.15}s">${filled ? '⭐' : '☆'}</span>`;
+  }).join('');
+
+  return `<div class="result">
+    <div class="result-emoji">${stars === 3 ? '🏆' : stars === 2 ? '🎯' : '💪'}</div>
+    <div class="result-title">${title}</div>
+    <div style="color:var(--text2);font-size:14px;text-align:center;max-width:280px;line-height:1.5">${sub}</div>
+    <div class="result-stars">${starsHtml}</div>
+    <div class="result-xp-card">
+      <div class="result-xp-num">+${state.xpGained} XP</div>
+      <div class="result-xp-lbl">Bu Oyundan Kazanılan</div>
+      <div class="result-score-row">
+        <div class="result-stat">
+          <div class="result-stat-val" style="color:var(--green)">${state.correct}</div>
+          <div class="result-stat-lbl">Doğru</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-val" style="color:var(--red)">${state.wrong}</div>
+          <div class="result-stat-lbl">Yanlış</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-val" style="color:var(--gold)">${persist.xp}</div>
+          <div class="result-stat-lbl">Toplam XP</div>
+        </div>
+      </div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-secondary" id="result-home">🏠 Ana Sayfa</button>
+      <button class="btn-primary" id="result-retry">🔄 Tekrar</button>
+    </div>
+  </div>`;
+}
+
+function renderNoHearts() {
+  return `<div class="no-hearts">
+    <div class="no-hearts-emoji">💔</div>
+    <div class="no-hearts-title">Can Bitti!</div>
+    <div class="no-hearts-sub">Tüm canlarını harcadın. Canları yenileyerek devam edebilirsin.</div>
+    <button class="btn-primary" id="refill-hearts" style="max-width:260px;width:100%;padding:16px 24px;margin-top:8px">❤️ Canları Yenile</button>
+    <button class="btn-secondary" id="back-home-nh" style="max-width:260px;width:100%;padding:14px;margin-top:8px">🏠 Ana Sayfa</button>
+  </div>`;
+}
+
+function renderPaywall() {
+  return `<div class="paywall-overlay" id="paywall-overlay">
+    <div class="paywall-sheet">
+      <div class="paywall-handle"></div>
+      <div class="paywall-crown">👑</div>
+      <div class="paywall-title">Premium'a Geç!</div>
+      <div class="paywall-sub">Tüm seviyelerin kilidini aç ve öğrenmeye hız ver.</div>
+      <div class="paywall-features">
+        <div class="paywall-feature"><span class="paywall-feature-icon">🔓</span>Tüm 5 seviyeye tam erişim</div>
+        <div class="paywall-feature"><span class="paywall-feature-icon">📚</span>100'den fazla özgün soru</div>
+        <div class="paywall-feature"><span class="paywall-feature-icon">❤️</span>Sonsuz can hakkı</div>
+        <div class="paywall-feature"><span class="paywall-feature-icon">🏆</span>XP bonusları ve rozetler</div>
+        <div class="paywall-feature"><span class="paywall-feature-icon">📊</span>Detaylı ilerleme takibi</div>
+      </div>
+      <div class="plans">
+        <div class="plan-card${state.paywallPlan==='monthly'?' selected':''}" data-plan="monthly">
+          <div class="plan-period">Aylık</div>
+          <div class="plan-price">₺49</div>
+          <div class="plan-price-sub">/ay</div>
+        </div>
+        <div class="plan-card popular${state.paywallPlan==='yearly'?' selected':''}" data-plan="yearly">
+          <div class="plan-badge">En Popüler</div>
+          <div class="plan-period">Yıllık</div>
+          <div class="plan-price">₺299</div>
+          <div class="plan-price-sub">/yıl &bull; %49 tasarruf</div>
+        </div>
+      </div>
+      <button class="buy-btn" id="buy-btn">👑 Premium'u Satın Al</button>
+      <button class="paywall-close" id="paywall-close">Şimdi Değil</button>
+    </div>
+  </div>`;
+}
+
+// ============================================================
+// EVENTS
+// ============================================================
+function attachEvents() {
+  // Category cards (home)
+  document.querySelectorAll('.category-card').forEach(el => {
+    el.addEventListener('click', () => {
+      state.category = el.dataset.cat;
+      state.screen = 'map';
+      render();
+    });
+  });
+
+  // Back to home (map)
+  const backHome = document.getElementById('back-home');
+  if (backHome) backHome.addEventListener('click', () => { state.screen = 'home'; render(); });
+
+  // Level nodes (map)
+  document.querySelectorAll('.level-node').forEach(el => {
+    el.addEventListener('click', () => {
+      const level = parseInt(el.dataset.level);
+      const unlocked = persist.unlocked[state.category] || [1];
+      const isUnlocked = unlocked.includes(level);
+      const isPremiumLocked = level > 1 && !persist.premium;
+
+      if (isPremiumLocked) {
+        state.showPaywall = true;
         render();
-    </script>
+        return;
+      }
+      if (!isUnlocked) return;
+      startQuiz(state.category, level);
+    });
+  });
+
+  // Back to map (quiz)
+  const backMap = document.getElementById('back-map');
+  if (backMap) backMap.addEventListener('click', () => { state.screen = 'map'; render(); });
+
+  // Option buttons (quiz)
+  document.querySelectorAll('.option-btn').forEach(el => {
+    el.addEventListener('click', () => {
+      if (state.answered) return;
+      selectAnswer(parseInt(el.dataset.opt));
+    });
+  });
+
+  // Next question
+  const nextBtn = document.getElementById('next-btn');
+  if (nextBtn) nextBtn.addEventListener('click', nextQuestion);
+
+  // Result buttons
+  const resultHome = document.getElementById('result-home');
+  if (resultHome) resultHome.addEventListener('click', () => { state.screen = 'home'; render(); });
+
+  const resultRetry = document.getElementById('result-retry');
+  if (resultRetry) resultRetry.addEventListener('click', () => startQuiz(state.category, state.level));
+
+  // No hearts
+  const refill = document.getElementById('refill-hearts');
+  if (refill) refill.addEventListener('click', () => {
+    persist.hearts = 5;
+    savePersist(persist);
+    startQuiz(state.category, state.level);
+  });
+
+  const backHomeNh = document.getElementById('back-home-nh');
+  if (backHomeNh) backHomeNh.addEventListener('click', () => { state.screen = 'home'; render(); });
+
+  // Paywall
+  const paywallOverlay = document.getElementById('paywall-overlay');
+  if (paywallOverlay) {
+    paywallOverlay.addEventListener('click', e => {
+      if (e.target === paywallOverlay) { state.showPaywall = false; render(); }
+    });
+  }
+
+  const paywallClose = document.getElementById('paywall-close');
+  if (paywallClose) paywallClose.addEventListener('click', () => { state.showPaywall = false; render(); });
+
+  document.querySelectorAll('.plan-card').forEach(el => {
+    el.addEventListener('click', () => {
+      state.paywallPlan = el.dataset.plan;
+      document.querySelectorAll('.plan-card').forEach(p => p.classList.remove('selected'));
+      el.classList.add('selected');
+    });
+  });
+
+  const buyBtn = document.getElementById('buy-btn');
+  if (buyBtn) buyBtn.addEventListener('click', () => {
+    persist.premium = true;
+    savePersist(persist);
+    state.showPaywall = false;
+    render();
+    showToast('🎉 Premium aktif! Tüm seviyelerin kilidi açıldı!');
+  });
+}
+
+// ============================================================
+// QUIZ LOGIC
+// ============================================================
+function startQuiz(cat, level) {
+  state.category = cat;
+  state.level = level;
+  state.questions = getQuestions(cat, level);
+  state.qIndex = 0;
+  state.selected = null;
+  state.answered = false;
+  state.correct = 0;
+  state.wrong = 0;
+  state.combo = 0;
+  state.xpGained = 0;
+  state.screen = 'quiz';
+  render();
+}
+
+function selectAnswer(opt) {
+  const q = state.questions[state.qIndex];
+  state.selected = opt;
+  state.answered = true;
+  const isCorrect = opt === q.correct;
+
+  if (isCorrect) {
+    state.correct++;
+    state.combo++;
+    let xp = 10;
+    if (state.combo >= 3) xp += 5;
+    state.xpGained += xp;
+    persist.xp += xp;
+    savePersist(persist);
+    showFloatingXP(xp);
+  } else {
+    state.wrong++;
+    state.combo = 0;
+    persist.hearts = Math.max(0, persist.hearts - 1);
+    savePersist(persist);
+  }
+
+  render();
+
+  // Check no hearts
+  if (!isCorrect && persist.hearts === 0) {
+    setTimeout(() => { state.screen = 'nohearts'; render(); }, 1600);
+  }
+}
+
+function nextQuestion() {
+  if (state.qIndex >= state.questions.length - 1) {
+    finishQuiz();
+  } else {
+    state.qIndex++;
+    state.selected = null;
+    state.answered = false;
+    render();
+  }
+}
+
+function finishQuiz() {
+  const stars = calcStars(state.correct);
+  const cat = state.category;
+  const level = state.level;
+
+  // Level XP reward (only if improving stars)
+  if (!persist.stars[cat]) persist.stars[cat] = {};
+  const prevStars = persist.stars[cat][level] || 0;
+  if (stars > prevStars) {
+    const xpBonus = LEVELS[level].xpReward;
+    state.xpGained += xpBonus;
+    persist.xp += xpBonus;
+    persist.stars[cat][level] = stars;
+  }
+
+  // Unlock next level if ≥3 correct
+  if (state.correct >= 3 && level < 5) {
+    if (!persist.unlocked[cat]) persist.unlocked[cat] = [1];
+    if (!persist.unlocked[cat].includes(level + 1)) {
+      persist.unlocked[cat].push(level + 1);
+    }
+  }
+
+  savePersist(persist);
+  state.screen = 'result';
+  render();
+
+  if (stars === 3) setTimeout(spawnConfetti, 300);
+}
+
+// ============================================================
+// CONFETTI
+// ============================================================
+function spawnConfetti() {
+  const colors = ['#667eea','#764ba2','#f093fb','#f5576c','#4facfe','#00f2fe','#ffd700','#00e676','#ff6b35','#a8edea','#fd79a8','#fdcb6e'];
+  const wrapper = document.getElementById('app-wrapper');
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const left = Math.random() * 100;
+    const duration = Math.random() * 2 + 2.5;
+    const delay = Math.random() * 1.5;
+    const w = Math.random() * 10 + 6;
+    const h = Math.random() * 14 + 8;
+    c.style.cssText = [
+      `left:${left}%`,
+      `top:-20px`,
+      `width:${w}px`,
+      `height:${h}px`,
+      `background:${color}`,
+      `animation-duration:${duration}s`,
+      `animation-delay:${delay}s`,
+      `transform:rotate(${Math.random()*360}deg)`,
+      `border-radius:${Math.random() > 0.5 ? '50%' : '2px'}`
+    ].join(';');
+    wrapper.appendChild(c);
+    setTimeout(() => c.remove(), (duration + delay + 0.5) * 1000);
+  }
+}
+
+// ============================================================
+// FLOATING XP
+// ============================================================
+function showFloatingXP(amount) {
+  const el = document.createElement('div');
+  el.className = 'float-xp';
+  el.textContent = `+${amount} XP`;
+  const wrapper = document.getElementById('app-wrapper');
+  const rect = wrapper.getBoundingClientRect();
+  el.style.left = `${rect.left + rect.width / 2 - 30}px`;
+  el.style.top  = `${rect.top  + rect.height / 2 - 40}px`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1300);
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = [
+    'position:fixed',
+    'bottom:80px',
+    'left:50%',
+    'transform:translateX(-50%)',
+    'background:linear-gradient(135deg,#667eea,#764ba2)',
+    'color:#fff',
+    'padding:12px 20px',
+    'border-radius:16px',
+    "font-family:'Poppins',sans-serif",
+    'font-size:14px',
+    'font-weight:600',
+    'z-index:9999',
+    'box-shadow:0 8px 30px rgba(102,126,234,0.4)',
+    'text-align:center',
+    'max-width:320px',
+    'width:calc(100% - 40px)',
+    'animation:popIn 0.4s var(--spring)'
+  ].join(';');
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ============================================================
+// PWA
+// ============================================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  initParticles();
+  render();
+  // Auto-advance splash after 1.8s
+  setTimeout(() => {
+    if (state.screen === 'splash') {
+      state.screen = 'home';
+      render();
+    }
+  }, 1800);
+}
+
+init();
+</script>
 </body>
 </html>
